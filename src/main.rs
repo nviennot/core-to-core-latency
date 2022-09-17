@@ -6,6 +6,7 @@ use std::io::Write;
 use minstant::Instant;
 #[cfg(not(feature = "rdtsc"))]
 use std::time::Instant;
+use clap::Parser;
 
 const DEFAULT_NUM_ROUND_TRIP: RoundTrips = 30_000;
 type RoundTrips = u32;
@@ -59,11 +60,19 @@ pub fn bench(
     })
 }
 
+#[derive(clap::Parser)]
+struct Args {
+    /// The number of iterations
+    #[clap(default_value_t = DEFAULT_NUM_ROUND_TRIP, value_parser)]
+    num_round_trips: RoundTrips,
+
+    /// Outputs CSV results on stdout
+    #[clap(long, value_parser)]
+    csv: bool
+}
+
 fn main() {
-    // "./prog [num_round_trips]"
-    let args: Vec<String> = std::env::args().collect();
-    let num_round_trips: RoundTrips = args.get(1).map(|n| n.parse().unwrap())
-        .unwrap_or(DEFAULT_NUM_ROUND_TRIP);
+    let args = Args::parse();
 
     let cores = core_affinity::get_core_ids().expect("get_core_ids() failed");
     assert!(cores.len() >= 2);
@@ -73,36 +82,50 @@ fn main() {
     #[cfg(not(feature = "rdtsc"))]
     let tsc = false;
 
-    println!("Num cores: {}", cores.len());
-    println!("Num round trips: {}", num_round_trips);
-    println!("Using RDTSC to measure time: {}", tsc);
-    println!("Showing round-trip-time/2 in nanoseconds:");
+    eprintln!("Num cores: {}", cores.len());
+    eprintln!("Num round trips: {}", args.num_round_trips);
+    eprintln!("Using RDTSC to measure time: {}", tsc);
+    eprintln!("Showing round-trip-time/2 in nanoseconds:");
+
+    let mut results = Vec::new();
 
     // First print the column header
-    print!("{: >5}", "");
+    eprint!("{: >5}", "");
     for j in &cores {
-        print!("{: >5}", j.id);
+        eprint!("{: >5}", j.id);
         //        |||
         //        ||+-- Width
         //        |+--- Align
         //        +---- Fill
     }
-    println!();
+    eprintln!();
 
     // Warmup
     bench((cores[0], cores[1]), 1000);
 
     for i in &cores {
-        print!("{: >5}", i.id);
+        let mut row = Vec::new();
+        eprint!("{: >5}", i.id);
         for j in &cores {
-            if i.id != j.id {
-                let duration = bench((*i, *j), num_round_trips) / num_round_trips / 2;
-                print!("{: >5}", duration.as_nanos());
+            let duration = if i.id != j.id {
+                let duration = bench((*i, *j), args.num_round_trips);
+                let duration = (duration.as_nanos() as f64) / (args.num_round_trips as f64) / 2.0;
+                eprint!("{: >5.0}", duration);
+                duration
             } else {
-                print!("{: >5}", "");
-            }
+                eprint!("{: >5}", "");
+                f64::NAN
+            };
             let _ = std::io::stdout().lock().flush();
+            row.push(duration);
         }
-        println!();
+        results.push(row);
+        eprintln!();
+    }
+
+    if args.csv {
+        for row in &results {
+            println!("{}", row.iter().map(|v| v.to_string()).collect::<Vec<_>>().join(","));
+        }
     }
 }
