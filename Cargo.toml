@@ -9,6 +9,9 @@ edition = "2021"
 core_affinity = "*"
 minstant = { version = "*", optional = true }
 clap = { version = "3", features = ["derive"] }
+ndarray = "*"
+ansi_term = "*"
+ordered-float = "*"
 
 [features]
 default = ["rdtsc"]
