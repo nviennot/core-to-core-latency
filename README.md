@@ -25,6 +25,7 @@ CPU                                                                  | Release D
 ---------------------------------------------------------------------|---------------| --------------------------
 Intel Xeon Platinum 8375C @ 2.90GHz 32 Cores (Ice Lake, 3rd gen)     |  2021-Q2      | 51ns
 Intel Xeon Platinum 8275CL @ 3.00GHz 24 Cores (Cascade Lake, 2nd gen)|  2019-Q2      | 47ns
+Intel Core i7-1165G7 @ 2.80GHz 4 Cores (Tiger Lake, 11th gen)        |  2020-Q3      | 27ns
 Intel Core i9-9900K @ 3.60 GHz 8 Cores (Coffee Lake, 9th gen)        |  2018-Q4      | 21ns
 Intel Xeon E5-2695 v4 @ 2.10GHz 18 Cores (Broadwell, 5th gen)        |  2016-Q1      | 44ns
 Intel Core i5-4590 CPU @ 3.30GHz 4 Cores (Haswell, 4th gen)          |  2014-Q2      | 21ns
@@ -48,6 +49,12 @@ From an AWS `c6i.metal` machine.
 From an AWS `c5.metal` machine.
 
 <img src="https://user-images.githubusercontent.com/297060/190918895-8b90cc12-2e72-41d1-808b-6f03a8771898.png" width="700" />
+
+### Intel(R) Core(TM) i7-1165G7 @ 2.80GHz 4 Cores (Tiger Lake, 11th gen) 2020-Q3
+
+Data provided by [Jonas Wunderlich](https://github.com/jonas-w)
+
+<img src="https://user-images.githubusercontent.com/297060/190929491-aededfc2-e0f5-4e2f-9508-3eb154fd9bb1.png" width="450" />
 
 ### Intel Core i9-9900K @ 3.60 GHz 8 Cores (Coffee Lake, 8th gen) 2018-Q4
 
