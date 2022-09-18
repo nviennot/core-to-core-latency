@@ -10,7 +10,7 @@ of compare-exchange operation, and measure the latency.
 Results
 -------
 
-**See the results notebook for stats and graphics: [results/results.ipynb](results/results.ipynb).**
+Most of these measurments are done on a bare metal AWS server.
 
 CPU                                                                   | Median Latency
 ----------------------------------------------------------------------| ----------------
@@ -21,6 +21,18 @@ Intel Xeon E5-2695 v4 @ 2.10GHz 18 Cores (Broadwell, 5th gen)         | 44ns
 AMD EPYC 7R13 @ 48 Cores (Milan, 3rd gen)                             | 23ns and 107ns
 AWS Graviton3 @ 64 Cores (Arm Neoverse, 3rd gen)                      | 46ns
 AWS Graviton2 @ 64 Cores (Arm Neoverse, 2rd gen)                      | 47ns
+
+**See the notebook for additional CPU graphs: [results/results.ipynb](results/results.ipynb), it includes hyperthreading and dual socket configurations**
+
+### Heatmap of the AMD EPYC 7R13 (Milan, 3rd gen)
+
+We can see cores arranged in 6 groups of 8 in which latency is excellent within
+(23ns). When data crosses groups, the latency jumps to around 110ns. Note, that
+the last 3 groups have a better cross-group latency than the first 3 (~90ns).
+
+![7r33](https://user-images.githubusercontent.com/297060/190893255-56ea9890-9e06-4f2d-bcef-249a70c4597b.png)
+
+**See the notebook for additional CPU graphs: [results/results.ipynb](results/results.ipynb), it includes hyperthreading and dual socket configurations**
 
 How to use
 ----------
@@ -53,7 +65,10 @@ Max  latency: 52.1ns ±9.4 cores: (1,0)
 Mean latency: 38.4ns
 ```
 
+Use `--csv` to instruct the program to emit a CSV file on the stdout. It can be
+used in the jupter notebook for making the graphs
+
 License
 -------
 
-MIT
+This software is licensed under the MIT license
