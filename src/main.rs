@@ -98,9 +98,9 @@ fn main() {
     let tsc = false;
 
     eprintln!("Num cores: {}", n_cores);
-    eprintln!("Num samples: {}", num_samples);
-    eprintln!("Num round trips per samples: {}", num_round_trips);
     eprintln!("Using RDTSC to measure time: {}", tsc);
+    eprintln!("Num round trips per samples: {}", num_round_trips);
+    eprintln!("Num samples: {}", num_samples);
 
     let shape = ndarray::Ix3(n_cores, n_cores, num_samples as usize);
     let mut results = ndarray::Array::from_elem(shape, f64::NAN);

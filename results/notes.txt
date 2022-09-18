@@ -1,0 +1,5 @@
+Do the benchmark:
+./core-to-core-latency 5000 300 --csv > output.csv
+
+Get cpuid
+cat /proc/cpuinfo | grep 'model name' | head -n 1 | sed 's/^.*\t: //g'
