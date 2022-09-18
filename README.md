@@ -1,6 +1,10 @@
 Measuring CPU core-to-core latency
 ==================================
 
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+[![Cargo](https://img.shields.io/crates/v/core-to-core-latency.svg)](https://crates.io/crates/core-to-core-latency)
+
+
 We measure the latency it takes for a CPU to send a message to another CPU via
 its cache coherence protocol.
 
@@ -88,12 +92,8 @@ How to use
 First [install Rust](https://www.rust-lang.org/tools/install) and `gcc` on linux, then:
 
 ```
-$ git clone https://github.com/nviennot/core-to-core-latency.git
-$ cd core-to-core-latency
-$ cargo run --release
-   Compiling core-to-core-latency v0.1.0 (/Users/pafy/core-to-core-latency)
-    Finished release [optimized] target(s) in 0.96s
-     Running `target/release/core-to-core-latency`
+$ cargo install core-to-core-latency
+$ core-to-core-latency
 Num cores: 10
 Using RDTSC to measure time: false
 Num round trips per samples: 1000
@@ -120,7 +120,7 @@ Mean latency: 38.4ns
 Contribute
 -----------
 
-Use `cargo run --release 5000 --csv > output.csv` to instruct the program to use
+Use `core-to-core-latency 5000 --csv > output.csv` to instruct the program to use
 5000 iterations per sample to reduce the noise, and save the results.
 
 It can be used in the jupter notebook [results/results.ipynb](results/results.ipynb) for rendering graphs.

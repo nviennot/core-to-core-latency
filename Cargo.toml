@@ -1,17 +1,21 @@
 [package]
 name = "core-to-core-latency"
-version = "0.1.0"
+description = "Measures CPU core-to-core latency"
+authors = ["Nicolas Viennot <nicolas@viennot.com>"]
+repository = "https://github.com/nviennot/core-to-core-latency"
+license = "MIT"
+readme = "README.md"
+version = "1.0.0"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+exclude = ["/results"]
 
 [dependencies]
-core_affinity = "*"
-minstant = { version = "*", optional = true }
+core_affinity = "0.5"
+minstant = { version = "0.1", optional = true }
 clap = { version = "3", features = ["derive"] }
-ndarray = "*"
-ansi_term = "*"
-ordered-float = "*"
+ndarray = "0.15"
+ansi_term = "0.12"
+ordered-float = "3"
 
 [features]
 default = ["rdtsc"]

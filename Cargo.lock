@@ -75,7 +75,7 @@ dependencies = [
 
 [[package]]
 name = "core-to-core-latency"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "ansi_term",
  "clap",
