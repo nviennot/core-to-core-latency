@@ -11,6 +11,13 @@ its cache coherence protocol.
 By pinning two threads on two different CPU cores, we can get them to do a bunch
 of compare-exchange operation, and measure the latency.
 
+How to run:
+
+```
+$ cargo install core-to-core-latency
+$ core-to-core-latency
+```
+
 Results
 -------
 
