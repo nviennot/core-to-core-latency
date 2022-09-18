@@ -23,6 +23,7 @@ Results
 
 CPU                                                                  | Release Date  | Median inter-core latency
 ---------------------------------------------------------------------|---------------| --------------------------
+Intel Core i9-12900K @ 8+8 Cores (Alder Lake, 12th gen)              |  2021-Q4      | 35ns, 44ns, and 50ns
 Intel Xeon Platinum 8375C @ 2.90GHz 32 Cores (Ice Lake, 3rd gen)     |  2021-Q2      | 51ns
 Intel Xeon Platinum 8275CL @ 3.00GHz 24 Cores (Cascade Lake, 2nd gen)|  2019-Q2      | 47ns
 Intel Core i7-1165G7 @ 2.80GHz 4 Cores (Tiger Lake, 11th gen)        |  2020-Q3      | 27ns
@@ -37,6 +38,16 @@ Apple M1                                                             |  2020-Q4 
 Apple M1 Max                                                         |  2021-Q4      | 39ns
 
 **See the notebook for additional CPU graphs: [results/results.ipynb](results/results.ipynb), it includes hyperthreading and dual socket configurations**
+
+### Intel Core i9-12900K @ 8+8 Cores (Alder Lake, 12th gen) 2021-Q4
+
+Data provided by [bizude](https://github.com/bizude).
+
+This CPU has 8 performance cores, and 2 groups of 4 efficient cores.
+We see CPU=8 with fast access to all other cores.
+
+<img src="https://user-images.githubusercontent.com/297060/190930511-337ef53e-52c0-4350-9022-485689b7f242.png" width="530" />
+
 
 ### Intel Xeon Platinum 8375C @ 2.90GHz 32 Cores (Ice Lake, 3rd gen) 2021-Q2
 
