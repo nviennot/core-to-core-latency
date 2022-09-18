@@ -19,6 +19,7 @@ Intel Xeon Platinum 8275CL @ 3.00GHz 24 Cores (Cascade Lake, 2nd gen) | 47ns
 Intel Core i9-9900K @ 3.60 GHz 8 Cores (Coffee Lake, 8th gen)         | 21ns
 Intel Xeon E5-2695 v4 @ 2.10GHz 18 Cores (Broadwell, 5th gen)         | 44ns
 AMD EPYC 7R13 @ 48 Cores (Milan, 3rd gen)                             | 23ns and 107ns
+AMD Ryzen 9 5950X @ 3.40 GHz 16 Cores (Zen3, 4th gen)                 | 17ns and 85ns
 AWS Graviton3 @ 64 Cores (Arm Neoverse, 3rd gen)                      | 46ns
 AWS Graviton2 @ 64 Cores (Arm Neoverse, 2rd gen)                      | 47ns
 
@@ -57,6 +58,14 @@ We can see cores arranged in 6 groups of 8 in which latency is excellent within
 the last 3 groups have a better cross-group latency than the first 3 (~90ns).
 
 <img src="https://user-images.githubusercontent.com/297060/190893255-56ea9890-9e06-4f2d-bcef-249a70c4597b.png" width="1000" />
+
+### AMD Ryzen 9 5950X @ 3.40 GHz 16 Cores (Zen3, 4th gen)
+
+Data provided by [John Schoenick](https://github.com/Nephyrin)
+
+We can see 2 groups of 8 cores with latencies of 17ns intra-group, and 85ns inter-group.
+
+<img src="https://user-images.githubusercontent.com/297060/190926938-400092a0-45ff-4a6c-816a-1b694767c993.png" width="530" />
 
 ### AWS Graviton3 @ 64 Cores (Arm Neoverse, 3rd gen)
 
