@@ -24,20 +24,63 @@ AWS Graviton2 @ 64 Cores (Arm Neoverse, 2rd gen)                      | 47ns
 
 **See the notebook for additional CPU graphs: [results/results.ipynb](results/results.ipynb), it includes hyperthreading and dual socket configurations**
 
-### Heatmap of the AMD EPYC 7R13 (Milan, 3rd gen)
+### Intel Xeon Platinum 8375C @ 2.90GHz 32 Cores (Ice Lake, 3rd gen)
+
+From an AWS `c6i.metal` machine.
+
+<img src="https://user-images.githubusercontent.com/297060/190918865-7eaae192-6da6-41db-8faf-9496f6a7754b.png" width="1000" />
+
+### Intel Xeon Platinum 8275CL @ 3.00GHz 24 Cores (Cascade Lake, 2nd gen)
+
+From an AWS `c5.metal` machine.
+
+<img src="https://user-images.githubusercontent.com/297060/190918895-8b90cc12-2e72-41d1-808b-6f03a8771898.png" width="700" />
+
+### Intel Core i9-9900K @ 3.60 GHz 8 Cores (Coffee Lake, 8th gen)
+
+My gaming machine, it's twice as fast as the other server-oriented CPUs.
+
+<img src="https://user-images.githubusercontent.com/297060/190918912-8b551b33-14e6-4cd3-a82d-8ac241d1abb6.png" width="400" />
+
+### Intel Xeon E5-2695 v4 @ 2.10GHz 18 Cores (Broadwell, 5th gen)
+
+From a machine provided by GTHost
+
+<img src="https://user-images.githubusercontent.com/297060/190918934-a2b11676-e6e1-4b88-a8e4-6bf69663d477.png" width="550" />
+
+### AMD EPYC 7R13 (Milan, 3rd gen)
+
+From an AWS `c6a.metal` machine.
 
 We can see cores arranged in 6 groups of 8 in which latency is excellent within
 (23ns). When data crosses groups, the latency jumps to around 110ns. Note, that
 the last 3 groups have a better cross-group latency than the first 3 (~90ns).
 
-![7r33](https://user-images.githubusercontent.com/297060/190893255-56ea9890-9e06-4f2d-bcef-249a70c4597b.png)
+<img src="https://user-images.githubusercontent.com/297060/190893255-56ea9890-9e06-4f2d-bcef-249a70c4597b.png" width="1000" />
+
+### AWS Graviton3 @ 64 Cores (Arm Neoverse, 3rd gen)
+
+From an AWS `c7g.16xlarge` machine.
+
+<img src="https://user-images.githubusercontent.com/297060/190919040-7d6d2283-cbef-4544-8b07-f93f71754343.png" width="1000" />
+
+### AWS Graviton2 @ 64 Cores (Arm Neoverse, 2nd gen)
+
+From an AWS `c6gd.metal` machine.
+
+<img src="https://user-images.githubusercontent.com/297060/190919053-11480075-6731-49ce-af03-f50bb27e8b33.png" width="1000" />
+
 
 **See the notebook for additional CPU graphs: [results/results.ipynb](results/results.ipynb), it includes hyperthreading and dual socket configurations**
 
 How to use
 ----------
 
+First [install Rust](https://www.rust-lang.org/tools/install) and `gcc` on linux, then:
+
 ```
+$ git clone https://github.com/nviennot/core-to-core-latency.git
+$ cd core-to-core-latency
 $ cargo run --release
    Compiling core-to-core-latency v0.1.0 (/Users/pafy/core-to-core-latency)
     Finished release [optimized] target(s) in 0.96s
@@ -65,8 +108,15 @@ Max  latency: 52.1ns ±9.4 cores: (1,0)
 Mean latency: 38.4ns
 ```
 
-Use `--csv` to instruct the program to emit a CSV file on the stdout. It can be
-used in the jupter notebook for making the graphs
+Contribute
+-----------
+
+Use `cargo run --release 5000 --csv > output.csv` to instruct the program to use
+5000 iterations per sample to reduce the noise, and save the results.
+
+It can be used in the jupter notebook [results/results.ipynb](results/results.ipynb) for rendering graphs.
+
+Create a GitHub issue with the generated `output.csv` file and I'll add your results.
 
 License
 -------
