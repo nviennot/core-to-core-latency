@@ -148,9 +148,13 @@ fn main() {
         }
         eprintln!();
     }
+
+    #[cfg(target_os = "macos")]
+    eprintln!("{}", Color::Red.bold().paint("macOS may ignore thread-CPU affinity (we can't select a CPU to run on). Results may be innacuate"));
+
     eprintln!();
 
-    // Print min/max stats
+    // Print min/max latency
     {
         let mean = results.mean_axis(Axis(2)).unwrap();
         let stddev = results.std_axis(Axis(2), 1.0) / (num_samples as f64).sqrt();
@@ -175,12 +179,12 @@ fn main() {
         eprintln!("Max  latency: {}ns {} cores: ({},{})", mcolor.paint(max_mean), scolor.paint(max_stddev), max_core_id_i, max_core_id_j);
     }
 
-    // Print mean stats
+    // Print mean latency
     {
         let values = results.iter().copied().filter(|v| !v.is_nan()).collect::<Vec<_>>();
         let values = ndarray::arr1(&values);
         let mean = format!("{:.1}", values.mean().unwrap());
-        // no stddev, it's hard to put a value that is is meaningful without explanation
+        // no stddev, it's hard to put a value that is is meaningful without a lenthy explanation
         eprintln!("Mean latency: {}ns", mcolor.paint(mean));
     }
 
