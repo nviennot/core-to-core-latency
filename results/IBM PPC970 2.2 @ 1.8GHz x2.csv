@@ -1,0 +1,14 @@
+Num cores: 2
+Using RDTSC to measure time: false
+Num round trips per samples: 5000
+Num samples: 300
+Showing latency=round-trip-time/2 in nanoseconds:
+
+       0       1   
+  0
+  1  576±6 
+
+Min  latency: 576.0ns ±11.5 cores: (1,0)
+Max  latency: 576.0ns ±11.5 cores: (1,0)
+Mean latency: 576.0ns
+
