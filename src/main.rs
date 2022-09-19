@@ -1,86 +1,21 @@
-use ansi_term::Color;
-use core_affinity::CoreId;
-use ndarray::{Axis, s};
-use ordered_float::NotNan;
-use std::sync::Arc;
-use std::sync::atomic::{AtomicU8, Ordering};
-use std::io::Write;
-use clap::Parser;
+mod bench;
+mod utils;
 
-#[cfg(feature = "rdtsc")]
-use minstant::Instant;
-#[cfg(not(feature = "rdtsc"))]
-use std::time::Instant;
+use bench::Count;
+use std::sync::Arc;
+use clap::Parser;
+use quanta::Clock;
+use crate::bench::run_bench;
 
 const DEFAULT_NUM_SAMPLES: Count = 300;
-const DEFAULT_NUM_ROUND_TRIPS: Count = 1000;
-type Count = u32;
+const DEFAULT_NUM_ITERATIONS_PER_SAMPLE: Count = 1000;
 
-// This is a little matchup between two threads
-// One sends a ball (Ping!), and the other sends it back (Pong!)
-pub fn bench(
-    (ping_core, pong_core): (CoreId, CoreId),
-    num_round_trips: Count,
-    num_samples: Count,
-) -> Vec<std::time::Duration> {
-    #[derive(PartialEq, Eq)]
-    #[repr(u8)]
-    enum State {
-        WaitForPong,
-        Pong,
-        Ping,
-    }
-    use State::*;
-
-    // Not using std::thread::scope() because some users are using an older version of Rust
-    // We'll go with an Arc.
-
-    let state = Arc::new(AtomicU8::new(WaitForPong as u8));
-
-    // Pong
-    let pong = {
-        let state = state.clone();
-        std::thread::spawn(move || {
-            core_affinity::set_for_current(pong_core);
-
-            // Announce our presence
-            state.store(Pong as u8, Ordering::Relaxed);
-
-            for _ in 0..(num_round_trips*num_samples) {
-                while state.compare_exchange(Ping as u8, Pong as u8, Ordering::Relaxed, Ordering::Relaxed).is_err() {}
-            }
-        })
-    };
-
-    // Ping
-    let ping = std::thread::spawn(move || {
-        core_affinity::set_for_current(ping_core);
-
-        let mut results = Vec::with_capacity(num_samples as usize);
-
-        // Wait for Pong
-        while state.load(Ordering::Relaxed) == WaitForPong as u8 {}
-
-        for _ in 0..num_samples {
-            let start = Instant::now();
-            for _ in 0..num_round_trips {
-                while state.compare_exchange(Pong as u8, Ping as u8, Ordering::Relaxed, Ordering::Relaxed).is_err() {}
-            }
-            results.push(start.elapsed());
-        }
-
-        results
-    });
-
-    pong.join().unwrap();
-    ping.join().unwrap()
-}
-
+#[derive(Clone)]
 #[derive(clap::Parser)]
-struct Args {
+pub struct CliArgs {
     /// The number of iterations per sample
-    #[clap(default_value_t = DEFAULT_NUM_ROUND_TRIPS, value_parser)]
-    num_round_trips: Count,
+    #[clap(default_value_t = DEFAULT_NUM_ITERATIONS_PER_SAMPLE, value_parser)]
+    num_iterations: Count,
 
     /// The number of samples
     #[clap(default_value_t = DEFAULT_NUM_SAMPLES, value_parser)]
@@ -89,118 +24,66 @@ struct Args {
     /// Outputs the mean latencies in CSV format on stdout
     #[clap(long, value_parser)]
     csv: bool,
+
+    /// Select which benchmark to run, in a comma delimited list, e.g., '1,3' {n}
+    /// 1: CAS latency on a single shared cache line. {n}
+    /// 2: Single-writer single-reader latency on two shared cache lines. {n}
+    /// 3: One writer and one reader on many cache line, using the clock. {n}
+    #[clap(short, long, default_value="1", require_delimiter=true, value_delimiter=',', value_parser)]
+    bench: Vec<usize>,
+
+    /// Specify the cores by id that should be used, comma delimited. By default all cores are used.
+    #[clap(short, long, require_delimiter=true, value_delimiter=',', value_parser)]
+    cores: Vec<usize>,
 }
 
 fn main() {
-    let Args { num_samples, num_round_trips, csv } = Args::parse();
+    let args = CliArgs::parse();
 
     let cores = core_affinity::get_core_ids().expect("get_core_ids() failed");
-    assert!(cores.len() >= 2);
-    let n_cores = cores.len();
 
-    #[cfg(feature = "rdtsc")]
-    let tsc = minstant::is_tsc_available();
-    #[cfg(not(feature = "rdtsc"))]
-    let tsc = false;
+    let cores = if !args.cores.is_empty() {
+        args.cores.iter().copied()
+            .map(|cid| *cores.iter().find(|c| c.id == cid)
+                .unwrap_or_else(||panic!("Core {} not found. Available: {:?}", cid, &cores)))
+            .collect()
+    } else {
+        cores
+    };
 
-    eprintln!("Num cores: {}", n_cores);
-    eprintln!("Using RDTSC to measure time: {}", tsc);
-    eprintln!("Num round trips per samples: {}", num_round_trips);
-    eprintln!("Num samples: {}", num_samples);
-
-    let shape = ndarray::Ix3(n_cores, n_cores, num_samples as usize);
-    let mut results = ndarray::Array::from_elem(shape, f64::NAN);
-
-    // Warmup
-    bench((cores[0], cores[1]), 300, 3);
-
-    // First print the column header
-    eprintln!("Showing latency=round-trip-time/2 in nanoseconds:");
-    eprintln!();
-    eprint!("{: >3}", "");
-    for j in &cores {
-        eprint!(" {: >4}{: >3}", j.id, "");
-        //        |||
-        //        ||+-- Width
-        //        |+--- Align
-        //        +---- Fill
-    }
-    eprintln!();
-
-    let mcolor = Color::White.bold();
-    let scolor = Color::White.dimmed();
-
-    // Do the benchmark
-    for i in 0..n_cores {
-        let core_i = cores[i];
-        eprint!("{: >3}", core_i.id);
-        for j in 0..n_cores {
-            if i > j {
-                let core_j = cores[j];
-                // We add 1 warmup cycle first
-                let durations = bench((core_i, core_j), num_round_trips, 1+num_samples);
-                let durations = &durations[1..];
-                let mut values = results.slice_mut(s![i,j,..]);
-                for s in 0..num_samples as usize {
-                    values[s] = durations[s].as_nanos() as f64 / (num_round_trips as f64) / 2.0;
-                }
-
-                let mean = format!("{: >4.0}", values.mean().unwrap());
-                // We apply the central limit theorem to estimate the standard deviation
-                let stddev = format!("±{: <2.0}", values.std(1.0).min(99.0) / (num_samples as f64).sqrt());
-                eprint!(" {}{}", mcolor.paint(mean), scolor.paint(stddev));
-                let _ = std::io::stdout().lock().flush();
-            }
-        }
-        eprintln!();
-    }
-
+    eprintln!("Num cores: {}", cores.len());
+    eprintln!("Num iterations per samples: {}", args.num_iterations);
+    eprintln!("Num samples: {}", args.num_samples);
     #[cfg(target_os = "macos")]
-    eprintln!("{}", Color::Red.bold().paint("macOS may ignore thread-CPU affinity (we can't select a CPU to run on). Results may be inaccurate"));
+    eprintln!("{}", ansi_term::Color::Red.bold().paint("WARN macOS may ignore thread-CPU affinity (we can't select a CPU to run on). Results may be inaccurate"));
 
-    eprintln!();
+    let clock = Arc::new(Clock::new());
 
-    // Print min/max latency
-    {
-        let mean = results.mean_axis(Axis(2)).unwrap();
-        let stddev = results.std_axis(Axis(2), 1.0) / (num_samples as f64).sqrt();
+    for b in &args.bench {
+        match b {
+            1 => {
+                eprintln!();
+                eprintln!("1) CAS latency on a single shared cache line");
+                eprintln!();
+                run_bench(&cores, clock.clone(), &args, bench::cas::Bench);
+            }
+            2 => {
+                eprintln!();
+                eprintln!("2) Single-writer single-reader latency on two shared cache lines");
+                eprintln!();
+                run_bench(&cores, clock.clone(), &args, bench::read_write::Bench);
+            }
+            3 => {
+                let clock_read_overhead = utils::clock_read_overhead(&clock, args.num_iterations).as_nanos() as f64 / args.num_iterations as f64;
+                eprintln!("Reading the clock takes {:.2}ns", clock_read_overhead);
+                assert!((0.1..1000.0).contains(&clock_read_overhead), "The timing to read the clock is either not-consistant or too slow");
 
-        let ((min_i, min_j), _) = mean.indexed_iter()
-            .filter_map(|(i, v)| NotNan::new(*v).ok().map(|v| (i, v)))
-            .min_by_key(|(_, v)| *v)
-            .unwrap();
-        let min_mean = format!("{:.1}", mean[(min_i, min_j)]);
-        let min_stddev = format!("±{:.1}", stddev[(min_i, min_j)]);
-        let (min_core_id_i, min_core_id_j) = (cores[min_i].id, cores[min_j].id);
-
-        let ((max_i, max_j), _) = mean.indexed_iter()
-            .filter_map(|(i, v)| NotNan::new(*v).ok().map(|v| (i, v)))
-            .max_by_key(|(_, v)| *v)
-            .unwrap();
-        let max_mean = format!("{:.1}", mean[(max_i, max_j)]);
-        let max_stddev = format!("±{:.1}", stddev[(max_i, max_j)]);
-        let (max_core_id_i, max_core_id_j) = (cores[max_i].id, cores[max_j].id);
-
-        eprintln!("Min  latency: {}ns {} cores: ({},{})", mcolor.paint(min_mean), scolor.paint(min_stddev), min_core_id_i, min_core_id_j);
-        eprintln!("Max  latency: {}ns {} cores: ({},{})", mcolor.paint(max_mean), scolor.paint(max_stddev), max_core_id_i, max_core_id_j);
-    }
-
-    // Print mean latency
-    {
-        let values = results.iter().copied().filter(|v| !v.is_nan()).collect::<Vec<_>>();
-        let values = ndarray::arr1(&values);
-        let mean = format!("{:.1}", values.mean().unwrap());
-        // no stddev, it's hard to put a value that is meaningful without a lengthy explanation
-        eprintln!("Mean latency: {}ns", mcolor.paint(mean));
-    }
-
-    if csv {
-        let results = results.mean_axis(Axis(2)).unwrap();
-        for row in results.rows() {
-            let row = row.iter()
-                .map(|v| if v.is_nan() { "".to_string() } else { v.to_string() })
-                .collect::<Vec<_>>().join(",");
-            println!("{}", row);
+                eprintln!();
+                eprintln!("3) Message passing. One writer and one reader on many cache line, using the clock");
+                eprintln!();
+                run_bench(&cores, clock.clone(), &args, bench::msg_passing::Bench);
+            }
+            _ => panic!("--bench should be 1, 2 or 3"),
         }
     }
 }
