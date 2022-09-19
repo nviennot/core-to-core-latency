@@ -38,6 +38,7 @@ AMD Ryzen 7 5700X, 3.40 GHz, 8 Cores, Zen3, 4th gen, 2022-Q2                   |
 AMD Ryzen 7 2700X, 3.70 GHz, 8 Cores, Zen+, 2nd gen, 2018-Q3                   | 24ns and 92ns
 AWS Graviton3, 64 Cores, Arm Neoverse, 3rd gen, 2021-Q4                        | 46ns
 AWS Graviton2, 64 Cores, Arm Neoverse, 2rd gen, 2020-Q1                        | 47ns
+IBM PowerPC 970, 1.8GHz, 2 Cores, 2003-Q2                                      | 576ns
 
 ## Intel Core i9-12900K, 8+8 Cores, Alder Lake, 12th gen, 2021-Q4
 
