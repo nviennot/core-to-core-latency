@@ -35,6 +35,7 @@ Intel Xeon Platinum 8375C, 2.90GHz, 32 Cores, Ice Lake, 3rd gen, 2021-Q2       |
 Intel Xeon Platinum 8275CL, 3.00GHz, 24 Cores, Cascade Lake, 2nd gen, 2019-Q2  | 47ns
 Intel Xeon E5-2695 v4, 2.10GHz, 18 Cores, Broadwell, 5th gen, 2016-Q1          | 44ns
 AMD EPYC 7R13, 48 Cores, Milan, 3rd gen, 2021-Q1                               | 23ns, 107ns
+AMD Ryzen Threadripper 3960X, 3.80GHz, 24 Cores, Zen 2, 3rd Gen, 2019-Q4       | 24ns, 94ns
 AMD Ryzen 9 5950X, 3.40GHz, 16 Cores, Zen3, 4th gen, 2020-Q4                   | 17ns, 85ns
 AMD Ryzen 9 5900X, 3.40GHz, 12 Cores, Zen3, 4th gen, 2020-Q4                   | 16ns, 84ns
 AMD Ryzen 7 5700X, 3.40GHz, 8 Cores, Zen3, 4th gen, 2022-Q2                    | 18ns
@@ -121,6 +122,14 @@ We can see cores arranged in 6 groups of 8 in which latency is excellent within
 the last 3 groups have a better cross-group latency than the first 3 (~90ns).
 
 <img src="https://user-images.githubusercontent.com/297060/190893255-56ea9890-9e06-4f2d-bcef-249a70c4597b.png" width="1000" />
+
+## AMD Ryzen Threadripper 3960X, 3.80GHz, 24 Cores, Zen 2, 3rd Gen, 2019-Q4
+
+Data provided by [Mathias Siegel](https://github.com/ToolsDevler).
+
+We see the CPUs in 8 groups of 3, and better performance for CPUS in the group [13,24].
+
+<img src="https://user-images.githubusercontent.com/297060/190967989-efbe3341-9930-45e4-8cfe-c21d03abdb08.png" width="1000" />
 
 ## AMD Ryzen 9 5950X, 3.40GHz 16 Cores, Zen3, 4th gen, 2020-Q1
 
@@ -253,6 +262,7 @@ Intel Xeon Platinum 8375C, 2.90GHz, 32 Cores, Ice Lake, 3rd gen, 2021-Q2       |
 Intel Xeon Platinum 8275CL, 3.00GHz, 24 Cores, Cascade Lake, 2nd gen, 2019-Q2  | 7.6ns
 Intel Xeon E5-2695 v4, 2.10GHz, 18 Cores, Broadwell, 5th gen, 2016-Q1          | 7.6ns
 AMD EPYC 7R13, 48 Cores, Milan, 3rd gen, 2021-Q1                               | 9.8ns
+AMD Ryzen Threadripper 3960X, 3.80GHz, 24 Cores, Zen 2, 3rd Gen, 2019-Q4       | 6.5ns
 AMD Ryzen 9 5950X, 3.40GHz, 16 Cores, Zen3, 4th gen, 2020-Q4                   | 7.8ns
 AMD Ryzen 9 5900X, 3.40GHz, 12 Cores, Zen3, 4th gen, 2020-Q4                   | 7.6ns
 AMD Ryzen 7 5700X, 3.40GHz, 8 Cores, Zen3, 4th gen, 2022-Q2                    | 7.8ns
