@@ -146,7 +146,7 @@ fn main() {
                 }
 
                 let mean = format!("{: >4.0}", values.mean().unwrap());
-                // We apply the central limit therem to estimate the standard deviation
+                // We apply the central limit theorem to estimate the standard deviation
                 let stddev = format!("±{: <2.0}", values.std(1.0).min(99.0) / (num_samples as f64).sqrt());
                 eprint!(" {}{}", mcolor.paint(mean), scolor.paint(stddev));
                 let _ = std::io::stdout().lock().flush();
@@ -156,7 +156,7 @@ fn main() {
     }
 
     #[cfg(target_os = "macos")]
-    eprintln!("{}", Color::Red.bold().paint("macOS may ignore thread-CPU affinity (we can't select a CPU to run on). Results may be innacuate"));
+    eprintln!("{}", Color::Red.bold().paint("macOS may ignore thread-CPU affinity (we can't select a CPU to run on). Results may be inaccurate"));
 
     eprintln!();
 
@@ -190,7 +190,7 @@ fn main() {
         let values = results.iter().copied().filter(|v| !v.is_nan()).collect::<Vec<_>>();
         let values = ndarray::arr1(&values);
         let mean = format!("{:.1}", values.mean().unwrap());
-        // no stddev, it's hard to put a value that is is meaningful without a lenthy explanation
+        // no stddev, it's hard to put a value that is meaningful without a lengthy explanation
         eprintln!("Mean latency: {}ns", mcolor.paint(mean));
     }
 
