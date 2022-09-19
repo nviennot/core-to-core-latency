@@ -30,7 +30,7 @@ Intel Core i7-1165G7, 2.80GHz, 4 Cores, Tiger Lake, 11th gen, 2020-Q3          |
 Intel Core i7-6700K, 4.00GHz, 4 Cores, Skylake, 6th gen, 2015-Q3               | 27ns
 Intel Core i5-10310U, 4 Cores, Comet Lake, 10th gen, 2020-Q2                   | 21ns
 Intel Core i5-4590, 3.30GHz 4 Cores, Haswell, 4th gen, 2014-Q2                 | 21ns
-Apple M1 Pro, 6P+2E Cores, 2021-Q4                                             | 45ns, 145ns
+Apple M1 Pro, 6P+2E Cores, 2021-Q4                                             | 40ns, 53ns, 145ns
 Intel Xeon Platinum 8375C, 2.90GHz, 32 Cores, Ice Lake, 3rd gen, 2021-Q2       | 51ns
 Intel Xeon Platinum 8275CL, 3.00GHz, 24 Cores, Cascade Lake, 2nd gen, 2019-Q2  | 47ns
 Intel Xeon E5-2695 v4, 2.10GHz, 18 Cores, Broadwell, 5th gen, 2016-Q1          | 44ns
@@ -88,11 +88,11 @@ Data provided by [Felipe Lube de Bragança](https://github.com/felubra).
 
 Data provided by [Aditya Sharma](https://github.com/epk).
 
-We see the two efficent cores clustered together with a latency of 57ns, then two groups of 3
-performance cores, with a latency of 45ns. Cross-group communication is slow at ~145ns, which is a
+We see the two efficent cores clustered together with a latency of 53ns, then two groups of 3
+performance cores, with a latency of 40ns. Cross-group communication is slow at ~145ns, which is a
 latency typically seen in multi-socket configurations.
 
-<img src="https://user-images.githubusercontent.com/297060/190956948-b6eeca81-a45e-4058-91ad-07453d2677c8.png" width="400" />
+<img src="https://user-images.githubusercontent.com/297060/190963421-ce5b59f6-c6ec-4066-b275-9cb5af0fc4be.png" width="400" />
 
 ## Intel Xeon Platinum 8375C, 2.90GHz 32 Cores, Ice Lake, 3rd gen, 2021-Q2
 
