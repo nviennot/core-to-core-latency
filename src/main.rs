@@ -4,7 +4,7 @@ use core_affinity::CoreId;
 use ndarray::{Axis, s};
 use ordered_float::NotNan;
 use std::sync::Arc;
-use std::sync::atomic::{Ordering, AtomicBool};
+use std::sync::atomic::{Ordering, AtomicBool, AtomicUsize};
 use std::io::Write;
 use std::time::Duration;
 use clap::Parser;
@@ -119,6 +119,63 @@ pub fn bench_read_write_on_two_cachelines(
     ping.join().unwrap()
 }
 
+
+// Thread 1 writes to cache line 1 and read cache line 2
+// Thread 2 writes to cache line 2 and read cache line 1
+// This is useful to benchmark shared ring buffers, or other IPC mechanisms.
+// The first sample should be discarded
+pub fn bench_msg_passing(
+    (ping_core, pong_core): (CoreId, CoreId),
+    num_iterations: Count,
+    num_samples: Count,
+) -> Vec<Duration> {
+    #[derive(Default)]
+    struct State {
+        pong_ready: CachePadded<AtomicUsize>,
+        values: Vec<CachePadded<AtomicUsize>>,
+    }
+    let mut state = State::default();
+    // Resize will fault all the pages in memory.
+    state.values.resize_with(num_iterations as usize, Default::default);
+    let state = Arc::new(state);
+
+    let pong = {
+        let state = state.clone();
+        std::thread::spawn(move || {
+            core_affinity::set_for_current(pong_core);
+
+            // Signal that we are ready
+            state.pong_ready.store(1, Ordering::Relaxed);
+
+            for i in 0..num_samples as usize {
+                for v in &state.values {
+                    while v.load(Ordering::Acquire) != i {}
+                }
+                state.pong_ready.store(i+1, Ordering::Relaxed);
+            }
+        })
+    };
+
+    let ping = std::thread::spawn(move || {
+        let mut results = Vec::with_capacity(num_samples as usize);
+        core_affinity::set_for_current(ping_core);
+
+        for i in 0..num_samples as usize {
+            let start = Instant::now();
+            for v in &state.values {
+                v.store(i, Ordering::Release);
+            }
+            while state.pong_ready.load(Ordering::Relaxed) != i+1 {}
+            results.push(start.elapsed());
+
+        }
+        results
+    });
+
+    pong.join().unwrap();
+    ping.join().unwrap()
+}
+
 #[derive(Clone)]
 #[derive(clap::Parser)]
 struct Args {
@@ -133,10 +190,14 @@ struct Args {
     /// Outputs the mean latencies in CSV format on stdout
     #[clap(long, value_parser)]
     csv: bool,
+
+    /// Which benches to run. Should be 1 2 or 3. Can be specified multiple times with --bench 1,2,3
+    #[clap(short, long, default_value="1", multiple=true, value_delimiter=',', value_parser)]
+    bench: Vec<usize>,
 }
 
 fn run_bench(cores: &[CoreId], args: Args, run_bench: BenchFn) {
-    let Args { num_samples, num_round_trips, csv } = args;
+    let Args { num_samples, num_round_trips, csv, .. } = args;
     let n_cores = cores.len();
     assert!(n_cores >= 2);
     let shape = ndarray::Ix3(n_cores, n_cores, num_samples as usize);
@@ -248,13 +309,27 @@ fn main() {
     #[cfg(target_os = "macos")]
     eprintln!("{}", Color::Red.bold().paint("macOS may ignore thread-CPU affinity (we can't select a CPU to run on). Results may be inaccurate"));
 
-    eprintln!("");
-    eprintln!("1) Ping/Pong latency on a single shared cache line (used in spinlocks)");
-    eprintln!("");
-    run_bench(&cores, args.clone(), bench_ping_pong_on_single_cacheline);
-
-    eprintln!("");
-    eprintln!("2) Causal write then read latency on two cache lines, (used in ringbuffers)");
-    eprintln!("");
-    run_bench(&cores, args.clone(), bench_read_write_on_two_cachelines);
+    for b in &args.bench {
+        match b {
+            1 => {
+                eprintln!("");
+                eprintln!("1) Ping/Pong latency on a single shared cache line");
+                eprintln!("");
+                run_bench(&cores, args.clone(), bench_ping_pong_on_single_cacheline);
+            }
+            2 => {
+                eprintln!("");
+                eprintln!("2) Ping/Pong latency on two shared cache lines");
+                eprintln!("");
+                run_bench(&cores, args.clone(), bench_read_write_on_two_cachelines);
+            }
+            3 => {
+                eprintln!("");
+                eprintln!("3) Message passing");
+                eprintln!("");
+                run_bench(&cores, args.clone(), bench_msg_passing);
+            }
+            _ => panic!("--bench should be 1, 2 or 3"),
+        }
+    }
 }
