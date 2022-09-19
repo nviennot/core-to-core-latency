@@ -19,8 +19,8 @@ $ cargo install core-to-core-latency
 $ core-to-core-latency
 ```
 
-Results
--------
+Single socket results
+----------------------
 
 CPU                                                                            | Median Latency
 -------------------------------------------------------------------------------| ------------------
@@ -38,8 +38,6 @@ AMD Ryzen 7 5700X, 3.40 GHz, 8 Cores, Zen3, 4th gen, 2022-Q2                   |
 AMD Ryzen 7 2700X, 3.70 GHz, 8 Cores, Zen+, 2nd gen, 2018-Q3                   | 24ns and 92ns
 AWS Graviton3, 64 Cores, Arm Neoverse, 3rd gen, 2021-Q4                        | 46ns
 AWS Graviton2, 64 Cores, Arm Neoverse, 2rd gen, 2020-Q1                        | 47ns
-
-**See the notebook for additional CPU graphs: [results/results.ipynb](results/results.ipynb), it includes hyperthreading and dual socket configurations**
 
 ## Intel Core i9-12900K, 8+8 Cores, Alder Lake, 12th gen, 2021-Q4
 
@@ -137,6 +135,53 @@ From an AWS `c6gd.metal` machine.
 
 <img src="https://user-images.githubusercontent.com/297060/190919053-11480075-6731-49ce-af03-f50bb27e8b33.png" width="1000" />
 
+Dual sockets results
+---------------------
+
+The following shows dual-socket configuration latency where one CPU on the first socket sends a message to
+another CPU on the second socket.
+The number in parenthesis next to the latency denotes the slowdown compared to single socket.
+
+CPU                                                                            | Median Latency
+-------------------------------------------------------------------------------| ------------------
+Intel Xeon Platinum 8375C, 2.90GHz, 32 Cores, Ice Lake, 3rd gen, 2021-Q2       | 108ns (2.1x)
+Intel Xeon Platinum 8275CL, 3.00GHz, 24 Cores, Cascade Lake, 2nd gen, 2019-Q2  | 134ns (2.8x)
+Intel Xeon E5-2695 v4, 2.10GHz, 18 Cores, Broadwell, 5th gen, 2016-Q1          | 118ns (2.7x)
+AMD EPYC 7R13, 48 Cores, Milan, 3rd gen, 2021-Q1                               | 197ns
+
+## Dual Intel Xeon Platinum 8375C, 2.90GHz 32 Cores, Ice Lake, 3rd gen, 2021-Q2
+
+From an AWS `c6i.metal` machine.
+
+<img src="https://user-images.githubusercontent.com/297060/190943800-7c3a10b0-1ebb-4b49-b4a8-9f24cff5bd88.png" width="1000" />
+
+## Dual Intel Xeon Platinum 8275CL, 3.00GHz 24 Cores, Cascade Lake, 2nd gen, 2019-Q2
+
+From an AWS `c5.metal` machine.
+
+<img src="https://user-images.githubusercontent.com/297060/190943799-80b844c1-3ddb-443f-82c4-20ddd2870130.png" width="1000" />
+
+## Dual Intel Xeon E5-2695 v4, 2.10GHz 18 Cores, Broadwell, 5th gen, 2016-Q1
+
+From a machine provided by GTHost
+
+<img src="https://user-images.githubusercontent.com/297060/190943798-69b63b1f-42d5-496c-b527-6e301cb38086.png" width="1000" />
+
+## Dual AMD EPYC 7R13, 48 Cores, Milan, 3rd gen, 2021-Q1
+
+From an AWS `c6a.metal` machine.
+
+This one is a bit odd. The single socket test for Socket 1 shows median latencies of 107ns
+cross-groups, but Socket 2 shows 200ns. It's 2x slower, very odd. The other platforms don't behave this way.
+In fact, the socket-to-socket latencies are than the core-to-core within Socket 2.
+
+Anandtech have measured [similar results on a Dual-Socket AMD EPYC 7763 and 7742](https://www.anandtech.com/show/16529/amd-epyc-milan-review/4).
+
+**Socket 2 does not behave similarly than Socket 1, it's twice as slow**.
+
+<img src="https://user-images.githubusercontent.com/297060/190943333-3297c0aa-5d99-478a-8518-9eb6f96e4bc5.png" width="1000" />
+
+---
 
 **See the notebook for additional CPU graphs: [results/results.ipynb](results/results.ipynb), it includes hyperthreading and dual socket configurations**
 
