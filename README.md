@@ -64,7 +64,7 @@ My gaming machine, it's twice as fast as the other server-oriented CPUs.
 
 Data provided by [Jonas Wunderlich](https://github.com/jonas-w).
 
-<img src="https://user-images.githubusercontent.com/297060/190929491-aededfc2-e0f5-4e2f-9508-3eb154fd9bb1.png" width="450" />
+<img src="https://user-images.githubusercontent.com/297060/190963117-ee579206-b352-41c7-8cc2-f21c10ce2506.png" width="450" />
 
 ## Intel Core i7-6700K, 4.00GHz, 4 Cores, Skylake, 6th gen, 2015-Q3
 
