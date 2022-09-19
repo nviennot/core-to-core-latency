@@ -181,9 +181,28 @@ Anandtech have measured [similar results on a Dual-Socket AMD EPYC 7763 and 7742
 
 <img src="https://user-images.githubusercontent.com/297060/190943333-3297c0aa-5d99-478a-8518-9eb6f96e4bc5.png" width="1000" />
 
+Hyper-threads
+-------------
+
+We measure the latency between two hyper-threads of the same core
+
+CPU                                                                            | Median Latency
+-------------------------------------------------------------------------------| ------------------
+Intel Core i9-12900K, 8+8 Cores, Alder Lake, 12th gen, 2021-Q4                 | 4.3ns
+Intel Core i9-9900K, 3.60 GHz, 8 Cores, Coffee Lake, 9th gen, 2018-Q4          | 6.2ns
+Intel Core i7-1165G7, 2.80GHz, 4 Cores, Tiger Lake, 11th gen, 2020-Q3          | 5.9ns
+Intel Core i5-10310U, 4 Cores, Comet Lake, 10th gen, 2020-Q2                   | 7.3ns
+Intel Xeon Platinum 8375C, 2.90GHz, 32 Cores, Ice Lake, 3rd gen, 2021-Q2       | 8.1ns
+Intel Xeon Platinum 8275CL, 3.00GHz, 24 Cores, Cascade Lake, 2nd gen, 2019-Q2  | 7.6ns
+Intel Xeon E5-2695 v4, 2.10GHz, 18 Cores, Broadwell, 5th gen, 2016-Q1          | 7.6ns
+AMD EPYC 7R13, 48 Cores, Milan, 3rd gen, 2021-Q1                               | 9.8ns
+AMD Ryzen 9 5950X, 3.40 GHz, 16 Cores, Zen3, 4th gen, 2020-Q4                  | 7.8ns
+AMD Ryzen 7 5700X, 3.40 GHz, 8 Cores, Zen3, 4th gen, 2022-Q2                   | 7.8ns
+AMD Ryzen 7 2700X, 3.70 GHz, 8 Cores, Zen+, 2nd gen, 2018-Q3                   | 9.7ns
+
 ---
 
-**See the notebook for additional CPU graphs: [results/results.ipynb](results/results.ipynb), it includes hyperthreading and dual socket configurations**
+**The notebook [results/results.ipynb](results/results.ipynb) contains the code to generate these graphs**
 
 How to use
 ----------
