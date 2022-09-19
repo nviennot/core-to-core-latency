@@ -41,6 +41,7 @@ AMD Ryzen 7 5700X, 3.40GHz, 8 Cores, Zen3, 4th gen, 2022-Q2                    |
 AMD Ryzen 7 2700X, 3.70GHz, 8 Cores, Zen+, 2nd gen, 2018-Q3                    | 24ns, 92ns
 AWS Graviton3, 64 Cores, Arm Neoverse, 3rd gen, 2021-Q4                        | 46ns
 AWS Graviton2, 64 Cores, Arm Neoverse, 2rd gen, 2020-Q1                        | 47ns
+Sun/Oracle SPARC T4, 2.85GHz, 8 cores, 2011-Q3                                 | 98ns
 IBM Power7, 3.3GHz, 8 Cores, 2010-Q1                                           | 173ns
 IBM PowerPC 970, 1.8GHz, 2 Cores, 2003-Q2                                      | 576ns
 
@@ -163,6 +164,12 @@ From an AWS `c6gd.metal` machine.
 
 <img src="https://user-images.githubusercontent.com/297060/190919053-11480075-6731-49ce-af03-f50bb27e8b33.png" width="1000" />
 
+## Sun/Oracle SPARC T4, 2.85GHz, 8 cores, 2011-Q3
+
+Data provided by [Kokoa van Houten](https://github.com/koachan).
+
+<img src="https://user-images.githubusercontent.com/297060/190962084-238b6491-4364-4c13-b9db-200cff80d33c.png" width="400" />
+
 ## IBM Power7, 3.3GHz, 8 Cores, 2010-Q1
 
 Data provided by [Kokoa van Houten](https://github.com/koachan).
@@ -183,6 +190,7 @@ Intel Xeon Platinum 8375C, 2.90GHz, 32 Cores, Ice Lake, 3rd gen, 2021-Q2       |
 Intel Xeon Platinum 8275CL, 3.00GHz, 24 Cores, Cascade Lake, 2nd gen, 2019-Q2  | 134ns (2.8x)
 Intel Xeon E5-2695 v4, 2.10GHz, 18 Cores, Broadwell, 5th gen, 2016-Q1          | 118ns (2.7x)
 AMD EPYC 7R13, 48 Cores, Milan, 3rd gen, 2021-Q1                               | 197ns
+Sun/Oracle SPARC T4, 2.85GHz, 8 cores, 2011-Q3                                 | 356ns (3.6x)
 IBM Power7, 3.3GHz, 8 Cores, 2010-Q1                                           | 443ns (2.5x)
 
 ## Dual Intel Xeon Platinum 8375C, 2.90GHz 32 Cores, Ice Lake, 3rd gen, 2021-Q2
@@ -217,11 +225,17 @@ Anandtech have measured [similar results on a Dual-Socket AMD EPYC 7763 and 7742
 
 <img src="https://user-images.githubusercontent.com/297060/190943333-3297c0aa-5d99-478a-8518-9eb6f96e4bc5.png" width="1000" />
 
+## Sun/Oracle SPARC T4, 2.85GHz, 8 cores, 2011-Q3
+
+Data provided by [Kokoa van Houten](https://github.com/koachan).
+
+<img src="https://user-images.githubusercontent.com/297060/190962083-2a781b0a-6923-45c9-a8cf-1ce87eb3dd58.png" width="530" />
+
 ## Dual IBM Power7, 3.3GHz, 8 Cores, 2010-Q1
 
 Data provided by [Kokoa van Houten](https://github.com/koachan).
 
-<img src="https://user-images.githubusercontent.com/297060/190960588-e079d97d-a028-4da7-ac55-ae982e1cd430.png" width="1000" />
+<img src="https://user-images.githubusercontent.com/297060/190960588-e079d97d-a028-4da7-ac55-ae982e1cd430.png" width="530" />
 
 Hyper-threads
 -------------
@@ -243,6 +257,7 @@ AMD Ryzen 9 5950X, 3.40GHz, 16 Cores, Zen3, 4th gen, 2020-Q4                   |
 AMD Ryzen 9 5900X, 3.40GHz, 12 Cores, Zen3, 4th gen, 2020-Q4                   | 7.6ns
 AMD Ryzen 7 5700X, 3.40GHz, 8 Cores, Zen3, 4th gen, 2022-Q2                    | 7.8ns
 AMD Ryzen 7 2700X, 3.70GHz, 8 Cores, Zen+, 2nd gen, 2018-Q3                    | 9.7ns
+Sun/Oracle SPARC T4, 2.85GHz, 8 cores, 2011-Q3                                 | 24ns
 IBM Power7, 3.3GHz, 8 Cores, 2010-Q1                                           | 70ns
 
 ---
