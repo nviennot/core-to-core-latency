@@ -3,6 +3,7 @@ Measuring CPU core-to-core latency
 
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 [![Cargo](https://img.shields.io/crates/v/core-to-core-latency.svg)](https://crates.io/crates/core-to-core-latency)
+[![Rust 1.57+](https://img.shields.io/badge/rust-1.57+-lightgray.svg)](https://www.rust-lang.org/tools/install)
 
 
 We measure the latency it takes for a CPU to send a message to another CPU via

@@ -2,6 +2,7 @@ use ansi_term::Color;
 use core_affinity::CoreId;
 use ndarray::{Axis, s};
 use ordered_float::NotNan;
+use std::sync::Arc;
 use std::sync::atomic::{AtomicU8, Ordering};
 use std::io::Write;
 use clap::Parser;
@@ -31,11 +32,15 @@ pub fn bench(
     }
     use State::*;
 
-    let state = AtomicU8::new(WaitForPong as u8);
+    // Not using std::thread::scope() because some users are using an older version of Rust
+    // We'll go with an Arc.
 
-    std::thread::scope(|s| {
-        // Pong
-        s.spawn(|| {
+    let state = Arc::new(AtomicU8::new(WaitForPong as u8));
+
+    // Pong
+    let pong = {
+        let state = state.clone();
+        std::thread::spawn(move || {
             core_affinity::set_for_current(pong_core);
 
             // Announce our presence
@@ -44,30 +49,31 @@ pub fn bench(
             for _ in 0..(num_round_trips*num_samples) {
                 while state.compare_exchange(Ping as u8, Pong as u8, Ordering::Relaxed, Ordering::Relaxed).is_err() {}
             }
-        });
-
-        // Ping
-        s.spawn(|| {
-            core_affinity::set_for_current(ping_core);
-
-            let mut results = Vec::with_capacity(num_samples as usize);
-
-            // Wait for Pong
-            while state.load(Ordering::Relaxed) == WaitForPong as u8 {}
-
-            for _ in 0..num_samples {
-                let start = Instant::now();
-                for _ in 0..num_round_trips {
-                    while state.compare_exchange(Pong as u8, Ping as u8, Ordering::Relaxed, Ordering::Relaxed).is_err() {}
-                }
-                results.push(start.elapsed());
-            }
-
-            results
         })
-        .join()
-        .unwrap()
-    })
+    };
+
+    // Ping
+    let ping = std::thread::spawn(move || {
+        core_affinity::set_for_current(ping_core);
+
+        let mut results = Vec::with_capacity(num_samples as usize);
+
+        // Wait for Pong
+        while state.load(Ordering::Relaxed) == WaitForPong as u8 {}
+
+        for _ in 0..num_samples {
+            let start = Instant::now();
+            for _ in 0..num_round_trips {
+                while state.compare_exchange(Pong as u8, Ping as u8, Ordering::Relaxed, Ordering::Relaxed).is_err() {}
+            }
+            results.push(start.elapsed());
+        }
+
+        results
+    });
+
+    pong.join().unwrap();
+    ping.join().unwrap()
 }
 
 #[derive(clap::Parser)]
@@ -192,7 +198,7 @@ fn main() {
         let results = results.mean_axis(Axis(2)).unwrap();
         for row in results.rows() {
             let row = row.iter()
-                .map(|v| v.is_nan().then_some("".to_string()).unwrap_or(v.to_string()))
+                .map(|v| if v.is_nan() { "".to_string() } else { v.to_string() })
                 .collect::<Vec<_>>().join(",");
             println!("{}", row);
         }

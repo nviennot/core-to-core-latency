@@ -5,7 +5,7 @@ authors = ["Nicolas Viennot <nicolas@viennot.com>"]
 repository = "https://github.com/nviennot/core-to-core-latency"
 license = "MIT"
 readme = "README.md"
-version = "1.0.0"
+version = "1.0.1"
 edition = "2021"
 exclude = ["/results"]
 
