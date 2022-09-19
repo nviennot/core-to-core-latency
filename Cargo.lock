@@ -35,6 +35,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bef38d45163c2f1dde094a7dfd33ccf595c92905c8f8f4fdc18d06fb1037718a"
 
 [[package]]
+name = "cache-padded"
+version = "1.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c1db59621ec70f09c5e9b597b220c7a2b43611f4710dc03ceb8748637775692c"
+
+[[package]]
 name = "clap"
 version = "3.2.22"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -78,6 +84,7 @@ name = "core-to-core-latency"
 version = "1.0.1"
 dependencies = [
  "ansi_term",
+ "cache-padded",
  "clap",
  "core_affinity",
  "minstant",

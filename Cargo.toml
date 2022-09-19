@@ -16,6 +16,7 @@ clap = { version = "3", features = ["derive"] }
 ndarray = "0.15"
 ansi_term = "0.12"
 ordered-float = "3"
+cache-padded = "1.2"
 
 [features]
 default = ["rdtsc"]
