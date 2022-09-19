@@ -25,17 +25,18 @@ Single socket results
 CPU                                                                            | Median Latency
 -------------------------------------------------------------------------------| ------------------
 Intel Core i9-12900K, 8+8 Cores, Alder Lake, 12th gen, 2021-Q4                 | 35ns, 44ns, 50ns
-Intel Core i9-9900K, 3.60 GHz, 8 Cores, Coffee Lake, 9th gen, 2018-Q4          | 21ns
+Intel Core i9-9900K, 3.60GHz, 8 Cores, Coffee Lake, 9th gen, 2018-Q4           | 21ns
 Intel Core i7-1165G7, 2.80GHz, 4 Cores, Tiger Lake, 11th gen, 2020-Q3          | 27ns
+Intel Core i7-6700K, 4.00GHz, 4 Cores, Skylake, 6th gen, 2015-Q3               | 27ns
 Intel Core i5-10310U, 4 Cores, Comet Lake, 10th gen, 2020-Q2                   | 21ns
 Intel Core i5-4590, 3.30GHz 4 Cores, Haswell, 4th gen, 2014-Q2                 | 21ns
 Intel Xeon Platinum 8375C, 2.90GHz, 32 Cores, Ice Lake, 3rd gen, 2021-Q2       | 51ns
 Intel Xeon Platinum 8275CL, 3.00GHz, 24 Cores, Cascade Lake, 2nd gen, 2019-Q2  | 47ns
 Intel Xeon E5-2695 v4, 2.10GHz, 18 Cores, Broadwell, 5th gen, 2016-Q1          | 44ns
 AMD EPYC 7R13, 48 Cores, Milan, 3rd gen, 2021-Q1                               | 23ns and 107ns
-AMD Ryzen 9 5950X, 3.40 GHz, 16 Cores, Zen3, 4th gen, 2020-Q4                  | 17ns and 85ns
-AMD Ryzen 7 5700X, 3.40 GHz, 8 Cores, Zen3, 4th gen, 2022-Q2                   | 18ns
-AMD Ryzen 7 2700X, 3.70 GHz, 8 Cores, Zen+, 2nd gen, 2018-Q3                   | 24ns and 92ns
+AMD Ryzen 9 5950X, 3.40GHz, 16 Cores, Zen3, 4th gen, 2020-Q4                   | 17ns and 85ns
+AMD Ryzen 7 5700X, 3.40GHz, 8 Cores, Zen3, 4th gen, 2022-Q2                    | 18ns
+AMD Ryzen 7 2700X, 3.70GHz, 8 Cores, Zen+, 2nd gen, 2018-Q3                    | 24ns and 92ns
 AWS Graviton3, 64 Cores, Arm Neoverse, 3rd gen, 2021-Q4                        | 46ns
 AWS Graviton2, 64 Cores, Arm Neoverse, 2rd gen, 2020-Q1                        | 47ns
 IBM PowerPC 970, 1.8GHz, 2 Cores, 2003-Q2                                      | 576ns
@@ -49,7 +50,7 @@ We see CPU=8 with fast access to all other cores.
 
 <img src="https://user-images.githubusercontent.com/297060/190930511-337ef53e-52c0-4350-9022-485689b7f242.png" width="530" />
 
-## Intel Core i9-9900K, 3.60 GHz, 8 Cores, Coffee Lake, 8th gen, 2018-Q4
+## Intel Core i9-9900K, 3.60GHz, 8 Cores, Coffee Lake, 8th gen, 2018-Q4
 
 My gaming machine, it's twice as fast as the other server-oriented CPUs.
 
@@ -60,6 +61,12 @@ My gaming machine, it's twice as fast as the other server-oriented CPUs.
 Data provided by [Jonas Wunderlich](https://github.com/jonas-w)
 
 <img src="https://user-images.githubusercontent.com/297060/190929491-aededfc2-e0f5-4e2f-9508-3eb154fd9bb1.png" width="450" />
+
+## Intel Core i7-6700K, 4.00GHz, 4 Cores, Skylake, 6th gen, 2015-Q3
+
+Data provided by [CanIGetaPR](https://github.com/CanIGetaPR)
+
+<img src="https://user-images.githubusercontent.com/297060/190945571-a48078bc-0399-489a-81ea-271413aeec13.png" width="450" />
 
 ## Intel Core i5-10310U, 4 Cores, Comet Lake, 10th gen, 2020-Q2
 
@@ -101,7 +108,7 @@ the last 3 groups have a better cross-group latency than the first 3 (~90ns).
 
 <img src="https://user-images.githubusercontent.com/297060/190893255-56ea9890-9e06-4f2d-bcef-249a70c4597b.png" width="1000" />
 
-## AMD Ryzen 9 5950X, 3.40 GHz 16 Cores, Zen3, 4th gen, 2020-Q1
+## AMD Ryzen 9 5950X, 3.40GHz 16 Cores, Zen3, 4th gen, 2020-Q1
 
 Data provided by [John Schoenick](https://github.com/Nephyrin).
 
@@ -110,13 +117,13 @@ We can see 2 groups of 8 cores with latencies of 17ns intra-group, and 85ns inte
 <img src="https://user-images.githubusercontent.com/297060/190926938-400092a0-45ff-4a6c-816a-1b694767c993.png" width="530" />
 
 
-## AMD Ryzen 7 5700X, 3.40 GHz, 8 Cores, Zen3, 4th gen, 2022-Q2
+## AMD Ryzen 7 5700X, 3.40GHz, 8 Cores, Zen3, 4th gen, 2022-Q2
 
 Data provided by [Ashley Sommer](https://github.com/ashleysommer).
 
 <img src="https://user-images.githubusercontent.com/297060/190940634-7c2b8beb-4630-4bfd-833b-df932808c8fb.png" width="400" />
 
-## AMD Ryzen 7 2700X, 3.70 GHz, 8 Cores, Zen+, 2nd gen, 2018-Q3
+## AMD Ryzen 7 2700X, 3.70GHz, 8 Cores, Zen+, 2nd gen, 2018-Q3
 
 Data provided by [David Hoppenbrouwers](https://github.com/Demindiro).
 
@@ -190,16 +197,17 @@ We measure the latency between two hyper-threads of the same core
 CPU                                                                            | Median Latency
 -------------------------------------------------------------------------------| ------------------
 Intel Core i9-12900K, 8+8 Cores, Alder Lake, 12th gen, 2021-Q4                 | 4.3ns
-Intel Core i9-9900K, 3.60 GHz, 8 Cores, Coffee Lake, 9th gen, 2018-Q4          | 6.2ns
+Intel Core i9-9900K, 3.60GHz, 8 Cores, Coffee Lake, 9th gen, 2018-Q4           | 6.2ns
 Intel Core i7-1165G7, 2.80GHz, 4 Cores, Tiger Lake, 11th gen, 2020-Q3          | 5.9ns
+Intel Core i7-6700K, 4.00GHz, 4 Cores, Skylake, 6th gen, 2015-Q3               | 6.9ns
 Intel Core i5-10310U, 4 Cores, Comet Lake, 10th gen, 2020-Q2                   | 7.3ns
 Intel Xeon Platinum 8375C, 2.90GHz, 32 Cores, Ice Lake, 3rd gen, 2021-Q2       | 8.1ns
 Intel Xeon Platinum 8275CL, 3.00GHz, 24 Cores, Cascade Lake, 2nd gen, 2019-Q2  | 7.6ns
 Intel Xeon E5-2695 v4, 2.10GHz, 18 Cores, Broadwell, 5th gen, 2016-Q1          | 7.6ns
 AMD EPYC 7R13, 48 Cores, Milan, 3rd gen, 2021-Q1                               | 9.8ns
-AMD Ryzen 9 5950X, 3.40 GHz, 16 Cores, Zen3, 4th gen, 2020-Q4                  | 7.8ns
-AMD Ryzen 7 5700X, 3.40 GHz, 8 Cores, Zen3, 4th gen, 2022-Q2                   | 7.8ns
-AMD Ryzen 7 2700X, 3.70 GHz, 8 Cores, Zen+, 2nd gen, 2018-Q3                   | 9.7ns
+AMD Ryzen 9 5950X, 3.40GHz, 16 Cores, Zen3, 4th gen, 2020-Q4                   | 7.8ns
+AMD Ryzen 7 5700X, 3.40GHz, 8 Cores, Zen3, 4th gen, 2022-Q2                    | 7.8ns
+AMD Ryzen 7 2700X, 3.70GHz, 8 Cores, Zen+, 2nd gen, 2018-Q3                    | 9.7ns
 
 ---
 
