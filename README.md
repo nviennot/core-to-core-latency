@@ -24,24 +24,25 @@ Single socket results
 
 CPU                                                                            | Median Latency
 -------------------------------------------------------------------------------| ------------------
-Intel Core i9-12900K, 8+8 Cores, Alder Lake, 12th gen, 2021-Q4                 | 35ns, 44ns, 50ns
+Intel Core i9-12900K, 8P+8E Cores, Alder Lake, 12th gen, 2021-Q4               | 35ns, 44ns, 50ns
 Intel Core i9-9900K, 3.60GHz, 8 Cores, Coffee Lake, 9th gen, 2018-Q4           | 21ns
 Intel Core i7-1165G7, 2.80GHz, 4 Cores, Tiger Lake, 11th gen, 2020-Q3          | 27ns
 Intel Core i7-6700K, 4.00GHz, 4 Cores, Skylake, 6th gen, 2015-Q3               | 27ns
 Intel Core i5-10310U, 4 Cores, Comet Lake, 10th gen, 2020-Q2                   | 21ns
 Intel Core i5-4590, 3.30GHz 4 Cores, Haswell, 4th gen, 2014-Q2                 | 21ns
+Apple M1 Pro, 6P+2E Cores, 2021-Q4                                             | 45ns, 145ns
 Intel Xeon Platinum 8375C, 2.90GHz, 32 Cores, Ice Lake, 3rd gen, 2021-Q2       | 51ns
 Intel Xeon Platinum 8275CL, 3.00GHz, 24 Cores, Cascade Lake, 2nd gen, 2019-Q2  | 47ns
 Intel Xeon E5-2695 v4, 2.10GHz, 18 Cores, Broadwell, 5th gen, 2016-Q1          | 44ns
-AMD EPYC 7R13, 48 Cores, Milan, 3rd gen, 2021-Q1                               | 23ns and 107ns
-AMD Ryzen 9 5950X, 3.40GHz, 16 Cores, Zen3, 4th gen, 2020-Q4                   | 17ns and 85ns
+AMD EPYC 7R13, 48 Cores, Milan, 3rd gen, 2021-Q1                               | 23ns, 107ns
+AMD Ryzen 9 5950X, 3.40GHz, 16 Cores, Zen3, 4th gen, 2020-Q4                   | 17ns, 85ns
 AMD Ryzen 7 5700X, 3.40GHz, 8 Cores, Zen3, 4th gen, 2022-Q2                    | 18ns
-AMD Ryzen 7 2700X, 3.70GHz, 8 Cores, Zen+, 2nd gen, 2018-Q3                    | 24ns and 92ns
+AMD Ryzen 7 2700X, 3.70GHz, 8 Cores, Zen+, 2nd gen, 2018-Q3                    | 24ns, 92ns
 AWS Graviton3, 64 Cores, Arm Neoverse, 3rd gen, 2021-Q4                        | 46ns
 AWS Graviton2, 64 Cores, Arm Neoverse, 2rd gen, 2020-Q1                        | 47ns
 IBM PowerPC 970, 1.8GHz, 2 Cores, 2003-Q2                                      | 576ns
 
-## Intel Core i9-12900K, 8+8 Cores, Alder Lake, 12th gen, 2021-Q4
+## Intel Core i9-12900K, 8P+8E Cores, Alder Lake, 12th gen, 2021-Q4
 
 Data provided by [bizude](https://github.com/bizude).
 
@@ -58,13 +59,13 @@ My gaming machine, it's twice as fast as the other server-oriented CPUs.
 
 ## Intel Core i7-1165G7, 2.80GHz, 4 Cores, Tiger Lake, 11th gen, 2020-Q3
 
-Data provided by [Jonas Wunderlich](https://github.com/jonas-w)
+Data provided by [Jonas Wunderlich](https://github.com/jonas-w).
 
 <img src="https://user-images.githubusercontent.com/297060/190929491-aededfc2-e0f5-4e2f-9508-3eb154fd9bb1.png" width="450" />
 
 ## Intel Core i7-6700K, 4.00GHz, 4 Cores, Skylake, 6th gen, 2015-Q3
 
-Data provided by [CanIGetaPR](https://github.com/CanIGetaPR)
+Data provided by [CanIGetaPR](https://github.com/CanIGetaPR).
 
 <img src="https://user-images.githubusercontent.com/297060/190945571-a48078bc-0399-489a-81ea-271413aeec13.png" width="450" />
 
@@ -76,9 +77,19 @@ Data provided by [Ashley Sommer](https://github.com/ashleysommer).
 
 ## Intel Core i5-4590, 3.30GHz, 4 Cores, Haswell, 4th gen, 2014-Q2
 
-Data provided by [Felipe Lube de Bragança](https://github.com/felubra)
+Data provided by [Felipe Lube de Bragança](https://github.com/felubra).
 
 <img src="https://user-images.githubusercontent.com/297060/190928985-42e13598-f5dc-4b49-b67e-dc300207d3c7.png" width="450" />
+
+## Apple M1 Pro, 6P+2E Cores, 2021-Q4
+
+Data provided by [Aditya Sharma](https://github.com/epk).
+
+We see the two efficent cores clustered together with a latency of 57ns, then two groups of 3
+performance cores, with a latency of 45ns. Cross-group communication is slow at ~145ns, which is a
+latency typically seen in multi-socket configurations.
+
+<img src="https://user-images.githubusercontent.com/297060/190956948-b6eeca81-a45e-4058-91ad-07453d2677c8.png" width="400" />
 
 ## Intel Xeon Platinum 8375C, 2.90GHz 32 Cores, Ice Lake, 3rd gen, 2021-Q2
 
