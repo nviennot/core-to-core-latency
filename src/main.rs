@@ -51,6 +51,7 @@ fn main() {
         cores
     };
 
+    utils::show_cpuid_info();
     eprintln!("Num cores: {}", cores.len());
     eprintln!("Num iterations per samples: {}", args.num_iterations);
     eprintln!("Num samples: {}", args.num_samples);
@@ -65,23 +66,20 @@ fn main() {
                 eprintln!();
                 eprintln!("1) CAS latency on a single shared cache line");
                 eprintln!();
-                run_bench(&cores, clock.clone(), &args, bench::cas::Bench);
+                run_bench(&cores, &clock, &args, bench::cas::Bench::new());
             }
             2 => {
                 eprintln!();
                 eprintln!("2) Single-writer single-reader latency on two shared cache lines");
                 eprintln!();
-                run_bench(&cores, clock.clone(), &args, bench::read_write::Bench);
+                run_bench(&cores, &clock, &args, bench::read_write::Bench::new());
             }
             3 => {
-                let clock_read_overhead = utils::clock_read_overhead(&clock, args.num_iterations).as_nanos() as f64 / args.num_iterations as f64;
-                eprintln!("Reading the clock takes {:.2}ns", clock_read_overhead);
-                assert!((0.1..1000.0).contains(&clock_read_overhead), "The timing to read the clock is either not-consistant or too slow");
-
+                utils::assert_rdtsc_usable(&clock);
                 eprintln!();
-                eprintln!("3) Message passing. One writer and one reader on many cache line, using the clock");
+                eprintln!("3) Message passing. One writer and one reader on many cache line");
                 eprintln!();
-                run_bench(&cores, clock.clone(), &args, bench::msg_passing::Bench);
+                run_bench(&cores, &clock, &args, bench::msg_passing::Bench::new(args.num_iterations));
             }
             _ => panic!("--bench should be 1, 2 or 3"),
         }

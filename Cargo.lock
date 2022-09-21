@@ -93,15 +93,17 @@ dependencies = [
 
 [[package]]
 name = "core-to-core-latency"
-version = "1.1.0"
+version = "1.2.0"
 dependencies = [
  "ansi_term",
  "cache-padded",
  "clap",
  "core_affinity",
+ "crossbeam-utils",
  "ndarray",
  "ordered-float",
  "quanta",
+ "raw-cpuid",
 ]
 
 [[package]]

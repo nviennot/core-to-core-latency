@@ -2,7 +2,6 @@ pub mod cas;
 pub mod read_write;
 pub mod msg_passing;
 
-use std::sync::Arc;
 use ansi_term::Color;
 use core_affinity::CoreId;
 use quanta::Clock;
@@ -14,12 +13,12 @@ use crate::CliArgs;
 pub type Count = u32;
 
 pub trait Bench {
-    fn run(&self, cores: (CoreId, CoreId), clock: Arc<Clock>, num_iterations: Count, num_samples: Count) -> Vec<f64>;
+    fn run(&self, cores: (CoreId, CoreId), clock: &Clock, num_iterations: Count, num_samples: Count) -> Vec<f64>;
     /// Whether the bench on (i,j) is the same as the bench on (j,i)
     fn is_symmetric(&self) -> bool { true }
 }
 
-pub fn run_bench(cores: &[CoreId], clock: Arc<Clock>, args: &CliArgs, bench: impl Bench) {
+pub fn run_bench(cores: &[CoreId], clock: &Clock, args: &CliArgs, bench: impl Bench) {
     let num_samples = args.num_samples;
     let num_iterations = args.num_iterations;
 
@@ -27,9 +26,6 @@ pub fn run_bench(cores: &[CoreId], clock: Arc<Clock>, args: &CliArgs, bench: imp
     assert!(n_cores >= 2);
     let shape = ndarray::Ix3(n_cores, n_cores, num_samples as usize);
     let mut results = ndarray::Array::from_elem(shape, f64::NAN);
-
-    // Warmup
-    bench.run((cores[0], cores[1]), clock.clone(), 300, 3);
 
     // First print the column header
     eprint!("    {: >3}", "");
@@ -61,7 +57,7 @@ pub fn run_bench(cores: &[CoreId], clock: Arc<Clock>, args: &CliArgs, bench: imp
 
             let core_j = cores[j];
             // We add 1 warmup cycle first
-            let durations = bench.run((core_i, core_j), clock.clone(), num_iterations, 1+num_samples);
+            let durations = bench.run((core_i, core_j), clock, num_iterations, 1+num_samples);
             let durations = &durations[1..];
             let mut values = results.slice_mut(s![i,j,..]);
             for s in 0..num_samples as usize {
