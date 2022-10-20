@@ -81,7 +81,13 @@ fn main() {
                 eprintln!();
                 run_bench(&cores, &clock, &args, bench::msg_passing::Bench::new(args.num_iterations));
             }
-            _ => panic!("--bench should be 1, 2 or 3"),
+            4 => {
+                eprintln!();
+                eprintln!("4) Throughput in GB/sec");
+                eprintln!();
+                run_bench(&cores, &clock, &args, bench::mem::Bench::new());
+            }
+            _ => panic!("--bench should be 1, 2, 3 or 4"),
         }
     }
 }

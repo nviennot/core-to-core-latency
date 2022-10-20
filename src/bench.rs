@@ -1,6 +1,7 @@
 pub mod cas;
 pub mod read_write;
 pub mod msg_passing;
+pub mod mem;
 
 use ansi_term::Color;
 use core_affinity::CoreId;
