@@ -42,6 +42,7 @@ AMD Ryzen 9 5900X, 3.40GHz, 12 Cores, Zen3, 4th gen, 2020-Q4                   |
 AMD Ryzen 7 5800U, 1.9GHz up to 4.4GHz, 8 Cores, Zen3, 4th gen, 2021-Q4        | 19ns
 AMD Ryzen 7 5700X, 3.40GHz, 8 Cores, Zen3, 4th gen, 2022-Q2                    | 18ns
 AMD Ryzen 7 2700X, 3.70GHz, 8 Cores, Zen+, 2nd gen, 2018-Q3                    | 24ns, 92ns
+AMD Ryzen 9 5900HX, 3.3GHz, 8 Cores, Zen3, 4th gen, 2021-Q1                    | 8ns, 17ns, 18ns
 AWS Graviton3, 64 Cores, Arm Neoverse, 3rd gen, 2021-Q4                        | 46ns
 AWS Graviton2, 64 Cores, Arm Neoverse, 2rd gen, 2020-Q1                        | 47ns
 Sun/Oracle SPARC T4, 2.85GHz, 8 cores, 2011-Q3                                 | 98ns
@@ -176,6 +177,10 @@ Data provided by [David Hoppenbrouwers](https://github.com/Demindiro).
 We can see 2 groups of 4 cores with latencies of 24ns intra-group, and 92ns inter-group.
 
 <img src="https://user-images.githubusercontent.com/297060/190931275-a4f8e842-a033-4438-9ceb-7f8a78951ec4.png" width="400" />
+
+## AMD Ryzen 9 5900HX, 3.3GHz, 8 Cores, Zen3, 4th gen, 2021-Q1
+
+Data provided by [r4nd0m1z3r](https://github.com/r4nd0m1z3r).
 
 ## AWS Graviton3, 64 Cores, Arm Neoverse, 3rd gen, 2021-Q4
 
