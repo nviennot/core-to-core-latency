@@ -39,6 +39,7 @@ AMD Ryzen Threadripper 3960X, 3.80GHz, 24 Cores, Zen 2, 3rd Gen, 2019-Q4       |
 AMD Ryzen Threadripper 1950X, 3.40GHz, 16 Cores, Zen, 1st Gen, 2017-Q3         | 25ns, 154ns
 AMD Ryzen 9 5950X, 3.40GHz, 16 Cores, Zen3, 4th gen, 2020-Q4                   | 17ns, 85ns
 AMD Ryzen 9 5900X, 3.40GHz, 12 Cores, Zen3, 4th gen, 2020-Q4                   | 16ns, 84ns
+AMD Ryzen 7 5800U, 1.9GHz up to 4.4GHz, 8 Cores, Zen3, 4th gen, 2021-Q4        | 19ns
 AMD Ryzen 7 5700X, 3.40GHz, 8 Cores, Zen3, 4th gen, 2022-Q2                    | 18ns
 AMD Ryzen 7 2700X, 3.70GHz, 8 Cores, Zen+, 2nd gen, 2018-Q3                    | 24ns, 92ns
 AWS Graviton3, 64 Cores, Arm Neoverse, 3rd gen, 2021-Q4                        | 46ns
@@ -155,6 +156,12 @@ Data provided by [Scott Markwell](https://github.com/smarkwell).
 We see two groups of 6 cores with latencies of 16ns intra-group and 84ns inter-group.
 
 <img src="https://user-images.githubusercontent.com/297060/190958644-c2dc7ff8-8ba9-430a-9441-de0b720e57e1.png" width="500" />
+
+## AMD Ryzen 7 5800U, 1.9GHz up to 4.4GHz, 8 Cores, Zen3, 4th gen, 2021-Q4
+
+Data provided by [George Melikov](https://github.com/gmelikov).
+
+<img src="https://user-images.githubusercontent.com/3868786/193410701-7766999a-7949-4481-9172-6d8bac7f4c1d.png" width="500" />
 
 ## AMD Ryzen 7 5700X, 3.40GHz, 8 Cores, Zen3, 4th gen, 2022-Q2
 
