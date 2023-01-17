@@ -24,6 +24,9 @@ Single socket results
 
 CPU                                                                            | Median Latency
 -------------------------------------------------------------------------------| ------------------
+AMD Ryzen 9 7950X, 16 Cores, zen4, 2022-Q3                                     | 68ns
+AMD EPYC 7773X, 64 Cores, Milan-X, 2022-Q1                                     | 115ns
+Intel Xeon Gold 6242, 16 Cores, Cascade Lake, 2019-Q2                          | 48ns
 Intel Xeon Phi 7210, 64 Cores, Knights Landing, 2016-Q2                        | 91ns
 HiSilicon Kunpeng 920-6426, 64 cores, ARMv8.2-A, 2019-Q1                       | 72ns
 Intel Core i9-12900K, 8P+8E Cores, Alder Lake, 12th gen, 2021-Q4               | 35ns, 44ns, 50ns
@@ -49,6 +52,50 @@ Sun/Oracle SPARC T4, 2.85GHz, 8 cores, 2011-Q3                                 |
 IBM Power7, 3.3GHz, 8 Cores, 2010-Q1                                           | 173ns
 IBM PowerPC 970, 1.8GHz, 2 Cores, 2003-Q2                                      | 576ns
 
+## Intel Xeon Phi 7210, 64 Cores, Knights Landing, 2016-Q2
+
+Data provided by [Concyclics](https://github.com/Concyclics).
+
+![image](https://user-images.githubusercontent.com/33325023/212899823-9c9513c9-33a9-49a6-8e8a-b881811e4c2b.png)
+
+## HiSilicon Kunpeng 920-6426, 64 cores, ARMv8.2-A, 2019-Q1
+
+Data provided by [Concyclics](https://github.com/Concyclics).
+
+![image](https://user-images.githubusercontent.com/33325023/212899952-fb6cee52-ba0d-4add-8896-4278d57d04db.png)
+
+## Intel Xeon Gold 6242, 16 Cores, Cascade Lake, 2019-Q2
+
+Data provided by [Concyclics](https://github.com/Concyclics).
+
+![image](https://user-images.githubusercontent.com/33325023/212899588-5ca08d1a-24bf-401b-8955-5052a6244aaf.png)
+
+## AMD Ryzen 9 7950X, 16 Cores, zen4, 2022-Q3
+
+Data provided by [zamadatix](https://github.com/zamadatix).
+
+![image](https://user-images.githubusercontent.com/33325023/212899457-2126ad0b-f38f-4b56-b723-05bc1bb18172.png)
+
+Data provided by [zamadatix](https://github.com/zamadatix).
+
+## AMD EPYC 7773X, 64 Cores, Milan-X, 2022-Q1
+
+Data provided by [SchrodingerZhu](https://github.com/SchrodingerZhu).
+
+![image](https://user-images.githubusercontent.com/33325023/212899131-5599bdcc-e2f7-4c33-9f42-cabd34e15251.png)
+
+## Apple M1 Ultra 16P+4E Cores, 2022-Q1
+
+Data provided by [Willian-Zhang](https://github.com/Willian-Zhang).
+
+![image](https://user-images.githubusercontent.com/33325023/212898721-8f09d80e-7d64-427b-aeaa-d87885f180cf.png)
+
+## Loongson 3A5000HV, 2.5GHz, 4 Cores, 2021-Q3
+
+Data provided by [Glavo](https://github.com/Glavo).
+
+![image](https://user-images.githubusercontent.com/33325023/212898113-8605327a-ff34-4f57-a46a-ee488c3437c8.png)
+
 ## Intel Core i9-12900K, 8P+8E Cores, Alder Lake, 12th gen, 2021-Q4
 
 Data provided by [bizude](https://github.com/bizude).
@@ -60,7 +107,7 @@ We see CPU=8 with fast access to all other cores.
 
 ## Intel Core i9-9900K, 3.60GHz, 8 Cores, Coffee Lake, 8th gen, 2018-Q4
 
-My gaming machine, it's twice as fast as the other server-oriented CPUs.
+Data provided by [nviennot](https://github.com/nviennot).
 
 <img src="https://user-images.githubusercontent.com/297060/190918912-8b551b33-14e6-4cd3-a82d-8ac241d1abb6.png" width="400" />
 
@@ -206,12 +253,19 @@ The number in parenthesis next to the latency denotes the slowdown compared to s
 
 CPU                                                                            | Median Latency
 -------------------------------------------------------------------------------| ------------------
+Intel Xeon Gold 6242, 16 Cores, Cascade Lake, 2019-Q2                          | 136ns (2.8x)
 Intel Xeon Platinum 8375C, 2.90GHz, 32 Cores, Ice Lake, 3rd gen, 2021-Q2       | 108ns (2.1x)
 Intel Xeon Platinum 8275CL, 3.00GHz, 24 Cores, Cascade Lake, 2nd gen, 2019-Q2  | 134ns (2.8x)
 Intel Xeon E5-2695 v4, 2.10GHz, 18 Cores, Broadwell, 5th gen, 2016-Q1          | 118ns (2.7x)
 AMD EPYC 7R13, 48 Cores, Milan, 3rd gen, 2021-Q1                               | 197ns
 Sun/Oracle SPARC T4, 2.85GHz, 8 cores, 2011-Q3                                 | 356ns (3.6x)
 IBM Power7, 3.3GHz, 8 Cores, 2010-Q1                                           | 443ns (2.5x)
+
+## Dual Intel Xeon Gold 6242, 16 Cores, Cascade Lake, 2019-Q2
+
+Data provided by [Concyclics](https://github.com/Concyclics).
+
+![image](https://user-images.githubusercontent.com/33325023/212899689-4761dd65-5973-4a1a-8a39-5ebb1bf205a1.png)
 
 ## Dual Intel Xeon Platinum 8375C, 2.90GHz 32 Cores, Ice Lake, 3rd gen, 2021-Q2
 
@@ -264,6 +318,9 @@ We measure the latency between two hyper-threads of the same core
 
 CPU                                                                            | Median Latency
 -------------------------------------------------------------------------------| ------------------
+AMD Ryzen 9 7950X, 16 Cores, zne4, 2022-Q3                                     | 5.3ns
+AMD EPYC 7773X, 64 Cores, Milan-X, 2022-Q1                                     | 10ns
+Intel Xeon Gold 6242, 16 Cores, Cascade Lake, 2019-Q2                          | 7.4ns
 Intel Core i9-12900K, 8+8 Cores, Alder Lake, 12th gen, 2021-Q4                 | 4.3ns
 Intel Core i9-9900K, 3.60GHz, 8 Cores, Coffee Lake, 9th gen, 2018-Q4           | 6.2ns
 Intel Core i7-1165G7, 2.80GHz, 4 Cores, Tiger Lake, 11th gen, 2020-Q3          | 5.9ns
