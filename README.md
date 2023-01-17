@@ -24,6 +24,8 @@ Single socket results
 
 CPU                                                                            | Median Latency
 -------------------------------------------------------------------------------| ------------------
+Intel Xeon Phi 7210, 64 Cores, Knights Landing, 2016-Q2                        | 91ns
+HiSilicon Kunpeng 920-6426, 64 cores, ARMv8.2-A, 2019-Q1                       | 72ns
 Intel Core i9-12900K, 8P+8E Cores, Alder Lake, 12th gen, 2021-Q4               | 35ns, 44ns, 50ns
 Intel Core i9-9900K, 3.60GHz, 8 Cores, Coffee Lake, 9th gen, 2018-Q4           | 21ns
 Intel Core i7-1165G7, 2.80GHz, 4 Cores, Tiger Lake, 11th gen, 2020-Q3          | 27ns
