@@ -53,6 +53,8 @@ AWS Graviton2, 64 Cores, Arm Neoverse, 2rd gen, 2020-Q1                        |
 Sun/Oracle SPARC T4, 2.85GHz, 8 cores, 2011-Q3                                 | 98ns
 IBM Power7, 3.3GHz, 8 Cores, 2010-Q1                                           | 173ns
 IBM PowerPC 970, 1.8GHz, 2 Cores, 2003-Q2                                      | 576ns
+IBM POWER9 02CY089, 3.5GHz, 8 Cores (32 Threads), 2017-Q4                      | 249ns
+Freescale i.MX 6 Quad, 1.3GHz, 4 Cores, 2017-Q4                                | 38ns
 
 ## Intel Xeon Phi 7210, 64 Cores, Knights Landing, 2016-Q2
 
