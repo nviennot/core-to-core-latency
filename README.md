@@ -390,6 +390,101 @@ It can be used in the jupter notebook [results/results.ipynb](results/results.ip
 
 Create a GitHub issue with the generated `output.csv` file and I'll add your results.
 
+CLI Options
+-----------
+
+### Core Selection (`--cores`)
+
+Specify which cores to benchmark by ID. Supports individual IDs and inclusive ranges:
+
+```bash
+# Use specific cores
+core-to-core-latency --cores 7,11,13
+
+# Use core ranges
+core-to-core-latency --cores 0-19
+
+# Mix ranges and individual IDs
+core-to-core-latency --cores 9-44,56-63
+```
+
+By default, all available cores are used.
+
+### Multi-Address CAS (`--num_addresses`)
+
+Test CAS latency across multiple cache lines simultaneously:
+
+```bash
+# Test with 4 cache lines
+core-to-core-latency --bench 1 --num_addresses 4
+```
+
+Each address is a separate cache line. The benchmark runs each address sequentially
+per core pair and reports per-address statistics.
+
+### Using Only Fresh Memory Pages (`--no-recycling`)
+
+Allocate new unique memory for each cpu-pairs during CAS test using mmap.
+
+```bash
+# Allocate new unique memory pages for each cpu-pairs
+core-to-core-latency --bench 1 --no-recycling
+```
+
+This is necessary for properly measuring core latency on some systems like AMD EPYC and ThreadRipper.
+
+### CSV Output (`--csv`, `--csv-output-prefix`)
+
+Enable structured CSV file output:
+
+```bash
+# Write CSV files with default prefix "report"
+core-to-core-latency --csv
+
+# Write CSV files with custom prefix
+core-to-core-latency --csv --csv-output-prefix myresults
+```
+
+When `--csv` is enabled, two files are produced per benchmark:
+
+#### `<prefix>.<bench>.per_address.csv`
+
+One row per core pair per address.
+
+| Column | Description |
+|--------|-------------|
+| `ping_core` | CPU core ID running the "ping" thread |
+| `pong_core` | CPU core ID running the "pong" thread |
+| `ping_numa` | NUMA node of ping core (placeholder: 0) |
+| `pong_numa` | NUMA node of pong core (placeholder: 0) |
+| `mem_numa` | NUMA node of memory allocation (placeholder: 0) |
+| `address` | Address index (0-based) |
+| `vaddr` | Virtual address of the cache line |
+| `mean_latency` | Mean latency in nanoseconds |
+| `median_latency` | Median latency in nanoseconds |
+| `min_latency` | Minimum latency |
+| `max_latency` | Maximum latency |
+| `cv_percent` | Coefficient of variation (%) |
+
+#### `<prefix>.<bench>.summary.csv`
+
+One row per core pair, aggregated across all addresses.
+
+| Column | Description |
+|--------|-------------|
+| `ping_core` | CPU core ID running the "ping" thread |
+| `pong_core` | CPU core ID running the "pong" thread |
+| `ping_numa` | NUMA node of ping core (placeholder: 0) |
+| `pong_numa` | NUMA node of pong core (placeholder: 0) |
+| `mem_numa` | NUMA node of memory allocation (placeholder: 0) |
+| `mean_of_means` | Mean of per-address mean latencies |
+| `mean_of_medians` | Mean of per-address median latencies |
+| `min_latency` | Minimum across addresses |
+| `max_latency` | Maximum across addresses |
+| `cv_percent` | Coefficient of variation (%) |
+
+A legacy N x N CSV matrix is also printed to stdout for backward compatibility.
+
 License
 -------
 

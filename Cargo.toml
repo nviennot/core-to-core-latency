@@ -19,3 +19,4 @@ ordered-float = "3"
 cache-padded = "1.2"
 crossbeam-utils = { version = "0.8", default-features = false }
 raw-cpuid = "10"
+memmap2 = "0.9"

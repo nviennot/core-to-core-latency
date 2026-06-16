@@ -3,6 +3,7 @@ use core_affinity::CoreId;
 use std::sync::Barrier;
 use std::sync::atomic::{Ordering, AtomicBool};
 use quanta::Clock;
+use crate::CliArgs;
 
 use super::Count;
 
@@ -13,7 +14,10 @@ pub struct Bench {
 }
 
 impl Bench {
-    pub fn new() -> Self {
+    pub fn new(num_addresses: usize) -> Self {
+        if num_addresses != 1 {
+            eprintln!("    WARN: num_addresses={} ignored for read_write (only supports 1)", num_addresses);
+        }
         Self {
             barrier: CachePadded::new(Barrier::new(2)),
             owned_by_ping: Default::default(),
@@ -27,11 +31,12 @@ impl super::Bench for Bench {
     // Thread 2 writes to cache line 2 and read cache line 1
     fn run(
         &self,
+        _args: &CliArgs,
         (ping_core, pong_core): (CoreId, CoreId),
         clock: &Clock,
         num_round_trips: Count,
         num_samples: Count,
-    ) -> Vec<f64> {
+    ) -> Vec<Vec<f64>> {
         let state = self;
 
         crossbeam_utils::thread::scope(|s| {
@@ -71,7 +76,7 @@ impl super::Bench for Bench {
             });
 
             pong.join().unwrap();
-            ping.join().unwrap()
+            vec![ping.join().unwrap()]
         }).unwrap()
     }
 }
