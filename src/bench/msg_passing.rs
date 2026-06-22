@@ -13,7 +13,10 @@ pub struct Bench {
 }
 
 impl Bench {
-    pub fn new(num_iterations: u32) -> Self {
+    pub fn new(num_iterations: u32, num_addresses: usize) -> Self {
+        if num_addresses != 1 {
+            eprintln!("    WARN: num_addresses={} ignored for msg_passing (only supports 1)", num_addresses);
+        }
         let clocks = (0..num_iterations as usize).map(|_| Default::default()).collect();
         Self {
             barrier: Barrier::new(2),
@@ -32,7 +35,7 @@ impl super::Bench for Bench {
         clock: &Clock,
         num_iterations: Count,
         num_samples: Count,
-    ) -> Vec<f64> {
+    ) -> Vec<Vec<f64>> {
         let clock_read_overhead_sum = utils::clock_read_overhead_sum(clock, num_iterations);
 
         // A shared time reference
@@ -91,7 +94,7 @@ impl super::Bench for Bench {
             });
 
             sender.join().unwrap();
-            receiver.join().unwrap()
+            vec![receiver.join().unwrap()]
         }).unwrap()
     }
 }

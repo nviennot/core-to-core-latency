@@ -390,6 +390,108 @@ It can be used in the jupter notebook [results/results.ipynb](results/results.ip
 
 Create a GitHub issue with the generated `output.csv` file and I'll add your results.
 
+CLI Options
+-----------
+
+### Core Selection (`--cores`)
+
+Specify which cores to benchmark by ID. Supports individual IDs and inclusive ranges:
+
+```bash
+# Use specific cores
+core-to-core-latency --cores 7,11,13
+
+# Use core ranges
+core-to-core-latency --cores 0-19
+
+# Mix ranges and individual IDs
+core-to-core-latency --cores 9-44,56-63
+```
+
+By default, all available cores are used.
+
+### Multi-Address CAS (`--num_addresses`)
+
+Test CAS latency across multiple cache lines simultaneously:
+
+```bash
+# Test with 4 cache lines
+core-to-core-latency --bench 1 --num_addresses 4
+```
+
+Each address is a separate cache line. The benchmark runs each address sequentially
+per core pair and reports per-address statistics.
+
+### CSV Output (`--csv`, `--csv-output-prefix`)
+
+Enable structured CSV file output:
+
+```bash
+# Write CSV files with default prefix "report"
+core-to-core-latency --csv
+
+# Write CSV files with custom prefix
+core-to-core-latency --csv --csv-output-prefix myresults
+```
+
+When `--csv` is enabled, two files are produced per benchmark.
+
+**Glossary**
+
+- **cell** - the finest measured unit: a unique `(ping_core, pong_core, address)`.
+  Each cell is measured `num_samples` times.
+- **sample-agg-collapsed value** - a cell's `num_samples` raw measurements reduced
+  to one number by `--sample_agg` (`mean` or `median`; default `median`). It equals
+  that cell's `mean_latency` (under `--sample_agg mean`) or `median_latency` (under
+  `--sample_agg median`) as reported in `per_address.csv`.
+
+| file | one row per | the five stats are computed over... |
+|---|---|---|
+| `per_address.csv` | cell: `(ping_core, pong_core, address)` | that cell's `num_samples` raw measurements |
+| `per_pair.csv` | core pair: `(ping_core, pong_core)` | the sample-agg-collapsed values of all addresses for that pair |
+
+#### `<prefix>.<bench>.per_address.csv`
+
+Columns (exact header order):
+`ping_core,pong_core,address,vaddr,mean_latency,median_latency,min_latency,max_latency,cv_percent`
+
+| Column | Description |
+|--------|-------------|
+| `ping_core` | CPU core ID running the "ping" thread |
+| `pong_core` | CPU core ID running the "pong" thread |
+| `address` | Address index (0-based) |
+| `vaddr` | Virtual address of the cache line |
+| `mean_latency` | Mean latency in nanoseconds (over raw samples) |
+| `median_latency` | Median latency in nanoseconds (over raw samples) |
+| `min_latency` | Minimum latency (over raw samples) |
+| `max_latency` | Maximum latency (over raw samples) |
+| `cv_percent` | Coefficient of variation (%) (over raw samples) |
+
+#### `<prefix>.<bench>.per_pair.csv`
+
+Columns (exact header order):
+`ping_core,pong_core,mean_latency,median_latency,min_latency,max_latency,cv_percent`
+
+| Column | Description |
+|--------|-------------|
+| `ping_core` | CPU core ID running the "ping" thread |
+| `pong_core` | CPU core ID running the "pong" thread |
+| `mean_latency` | Mean of the sample-agg-collapsed values |
+| `median_latency` | Median of the sample-agg-collapsed values |
+| `min_latency` | Minimum of the sample-agg-collapsed values |
+| `max_latency` | Maximum of the sample-agg-collapsed values |
+| `cv_percent` | Coefficient of variation (%) of the sample-agg-collapsed values |
+
+A legacy N x N CSV matrix is also printed to stdout for backward compatibility.
+
+### Sample Aggregation (`--sample_agg`)
+
+`--sample_agg <mean|median>` (default `median`, alias `--sample-agg`) controls how
+each cell's `num_samples` collapse to one representative value before `per_pair.csv`
+aggregates across addresses. It does not affect `per_address.csv`, which always
+reports the five stats over the raw samples. The active mode is echoed in the
+console run header.
+
 License
 -------
 
