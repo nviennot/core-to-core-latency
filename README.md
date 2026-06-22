@@ -390,6 +390,161 @@ It can be used in the jupter notebook [results/results.ipynb](results/results.ip
 
 Create a GitHub issue with the generated `output.csv` file and I'll add your results.
 
+CLI Options
+-----------
+
+### Core Selection (`--cores`)
+
+Specify which cores to benchmark by ID. Supports individual IDs and inclusive ranges:
+
+```bash
+# Use specific cores
+core-to-core-latency --cores 7,11,13
+
+# Use core ranges
+core-to-core-latency --cores 0-19
+
+# Mix ranges and individual IDs
+core-to-core-latency --cores 9-44,56-63
+```
+
+By default, all available cores are used.
+
+### Multi-Address CAS (`--num_addresses`)
+
+Test CAS latency across multiple cache lines simultaneously:
+
+```bash
+# Test with 4 cache lines
+core-to-core-latency --bench 1 --num_addresses 4
+```
+
+Each address is a separate cache line. The benchmark runs each address sequentially
+per core pair and reports per-address statistics.
+
+### CSV Output (`--csv`, `--csv-output-prefix`)
+
+Enable structured CSV file output:
+
+```bash
+# Write CSV files with default prefix "report"
+core-to-core-latency --csv
+
+# Write CSV files with custom prefix
+core-to-core-latency --csv --csv-output-prefix myresults
+```
+
+When `--csv` is enabled, up to three files are produced per benchmark.
+
+**Glossary**
+
+- **cell** - the finest measured unit: a unique `(mem_numa, ping_core, pong_core,
+  address)`. Each cell is measured `num_samples` times.
+- **sample-agg-collapsed value** - a cell's `num_samples` raw measurements reduced
+  to one number by `--sample_agg` (`mean` or `median`; default `median`). It equals
+  that cell's `mean_latency` (under `--sample_agg mean`) or `median_latency` (under
+  `--sample_agg median`) as reported in `per_address.csv`.
+
+**NUMA columns**
+
+- `mem_numa` - the NUMA node the shared buffer physically landed on, confirmed via
+  the `move_pages` syscall. `mem_numa = -1` means *unverified*: the kernel could not
+  report placement (e.g. `move_pages` unsupported or failed on this host).
+- `ping_numa` / `pong_numa` - the NUMA node of the ping / pong core (from sysfs).
+
+| file | one row per | emitted | the five stats are computed over... |
+|---|---|---|---|
+| `per_address.csv` | cell: `(mem_numa, ping_core, pong_core, address)` | always | that cell's `num_samples` raw measurements |
+| `per_domain.csv` | `(ping_core, pong_core, mem_numa)` | only when running >1 NUMA domain | the sample-agg-collapsed values of all addresses in that `(pair, domain)` |
+| `per_pair.csv` | core pair: `(ping_core, pong_core)` | always | the sample-agg-collapsed values of all addresses across all domains for that pair |
+
+#### `<prefix>.<bench>.per_address.csv`
+
+Columns (exact header order):
+`ping_core,pong_core,ping_numa,pong_numa,mem_numa,address,vaddr,mean_latency,median_latency,min_latency,max_latency,cv_percent`
+
+| Column | Description |
+|--------|-------------|
+| `ping_core` | CPU core ID running the "ping" thread |
+| `pong_core` | CPU core ID running the "pong" thread |
+| `ping_numa` | NUMA node of the ping core |
+| `pong_numa` | NUMA node of the pong core |
+| `mem_numa` | NUMA node the shared buffer landed on (`-1` if unverified) |
+| `address` | Address index (0-based) |
+| `vaddr` | Virtual address of the cache line |
+| `mean_latency` | Mean latency in nanoseconds (over raw samples) |
+| `median_latency` | Median latency in nanoseconds (over raw samples) |
+| `min_latency` | Minimum latency (over raw samples) |
+| `max_latency` | Maximum latency (over raw samples) |
+| `cv_percent` | Coefficient of variation (%) (over raw samples) |
+
+#### `<prefix>.<bench>.per_domain.csv`
+
+Emitted only when running more than one NUMA domain (e.g. `--numa 0,1`).
+
+Columns (exact header order):
+`ping_core,pong_core,ping_numa,pong_numa,mem_numa,mean_latency,median_latency,min_latency,max_latency,cv_percent`
+
+The five stats are computed over the sample-agg-collapsed values of all addresses in
+that `(pair, domain)`.
+
+#### `<prefix>.<bench>.per_pair.csv`
+
+Columns (exact header order):
+`ping_core,pong_core,ping_numa,pong_numa,mean_latency,median_latency,min_latency,max_latency,cv_percent`
+
+| Column | Description |
+|--------|-------------|
+| `ping_core` | CPU core ID running the "ping" thread |
+| `pong_core` | CPU core ID running the "pong" thread |
+| `ping_numa` | NUMA node of the ping core |
+| `pong_numa` | NUMA node of the pong core |
+| `mean_latency` | Mean of the sample-agg-collapsed values (across all domains) |
+| `median_latency` | Median of the sample-agg-collapsed values (across all domains) |
+| `min_latency` | Minimum of the sample-agg-collapsed values (across all domains) |
+| `max_latency` | Maximum of the sample-agg-collapsed values (across all domains) |
+| `cv_percent` | Coefficient of variation (%) of the sample-agg-collapsed values |
+
+A legacy N x N CSV matrix is also printed to stdout for backward compatibility.
+
+### Sample Aggregation (`--sample_agg`)
+
+`--sample_agg <mean|median>` (default `median`, alias `--sample-agg`) controls how
+each cell's `num_samples` collapse to one representative value before `per_domain.csv`
+and `per_pair.csv` aggregate across addresses. It does not affect `per_address.csv`,
+which always reports the five stats over the raw samples. The active mode is echoed in
+the console run header.
+
+### NUMA-aware placement (`--numa`, optional `numa` feature)
+
+NUMA support is an optional, Linux-only Cargo feature. Build it with:
+
+```bash
+cargo build --release --features numa
+```
+
+The backend uses kernel NUMA syscalls (`mmap`/`mbind`/`move_pages`) plus sysfs
+discovery - no system libnuma and no `build.rs`. Without the feature the binary is
+unchanged and `--numa` errors asking you to rebuild.
+
+`--numa <spec>` chooses the NUMA domain(s) for the shared cache lines. It accepts a
+single id, a comma list, inclusive `a-b` ranges, a mix, or `all` (mirroring
+`--cores`). One buffer of `num_addresses` cache lines is allocated per domain, and
+the whole core matrix is benchmarked once per domain.
+
+```bash
+core-to-core-latency --numa 0        # bind the shared lines to node 0
+core-to-core-latency --numa 0,1      # sweep nodes 0 and 1 (writes per_domain.csv)
+core-to-core-latency --numa all      # every node
+```
+
+- `--numa` placement is verified with `move_pages`: it is a hard error if a buffer
+  does not land on the requested node.
+- With `--numa` omitted, the shared buffer uses kernel-default first-touch placement;
+  on multi-node hardware the tool warns that results may vary run-to-run.
+- A `--features numa` binary still runs on non-NUMA hosts: `mem_numa` is reported as
+  `-1` (unverified) and the run does not abort.
+
 License
 -------
 

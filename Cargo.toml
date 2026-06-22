@@ -19,3 +19,11 @@ ordered-float = "3"
 cache-padded = "1.2"
 crossbeam-utils = { version = "0.8", default-features = false }
 raw-cpuid = "10"
+libc = { version = "0.2", optional = true }
+
+[features]
+# Optional, Linux-only NUMA-aware memory placement (--numa). Enables the libc
+# crate for raw mmap/mbind/move_pages/sysconf syscalls. No system libnuma and no
+# build.rs. Without this feature --numa errors asking to rebuild, and behavior is
+# identical to a non-NUMA build.
+numa = ["dep:libc"]
